@@ -37,7 +37,7 @@ infra/       Docker Compose and nginx configuration
 ## Roadmap
 
 - [x] Phase 0: repository skeleton
-- [ ] Phase 1: backend foundation (Spring Boot, PostgreSQL, Liquibase, Docker)
+- [x] Phase 1: backend foundation (Spring Boot, PostgreSQL, Liquibase, Docker)
 - [ ] Phase 2: authentication
 - [ ] Phase 3: content modules and API
 - [ ] Phase 4: admin panel
@@ -46,7 +46,23 @@ infra/       Docker Compose and nginx configuration
 
 ## Getting started
 
-Setup instructions will be added as the backend and frontends land. The whole stack will start with a single `docker compose up`.
+Requirements: Docker. For running the backend outside Docker: Java 21.
+
+```bash
+cp infra/.env.example infra/.env    # then edit the values
+docker compose -f infra/compose.yaml up --build
+```
+
+The API starts on http://localhost:8080. Health check: http://localhost:8080/actuator/health
+
+Run the backend tests (Testcontainers needs Docker running):
+
+```bash
+cd backend
+./mvnw verify
+```
+
+Frontend setup will be added in later phases.
 
 ## License
 

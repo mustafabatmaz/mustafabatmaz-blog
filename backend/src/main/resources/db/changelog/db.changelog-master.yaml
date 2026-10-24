@@ -1,0 +1,6 @@
+databaseChangeLog:
+  # Each change lives in its own file under changes/, included here in order.
+  # Never edit a changeset that has already run; add a new one instead.
+  - include:
+      file: changes/0000-baseline.yaml
+      relativeToChangelogFile: true
