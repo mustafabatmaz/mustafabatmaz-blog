@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0000-baseline
+      author: mustafabatmaz
+      comment: Marks the empty starting point of the schema
+      changes:
+        - tagDatabase:
+            tag: baseline

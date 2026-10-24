@@ -37,8 +37,9 @@ jobs:
           distribution: temurin
           java-version: '21'
           cache: maven
-      - name: Format check, tests
-        run: mvn -B spotless:check verify
+      # verify runs the tests (Testcontainers uses the runner's Docker) and spotless:check
+      - name: Build and test
+        run: ./mvnw -B verify
 
   frontend:
     needs: detect
