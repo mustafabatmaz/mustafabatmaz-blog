@@ -1,0 +1,29 @@
+# Private project files (never push)
+CLAUDE.md
+PROJECT_DECISION.md
+.claude/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Java / Maven
+target/
+
+# Node / frontend
+node_modules/
+.next/
+dist/
+coverage/
+*.tsbuildinfo
+.pnpm-store/
+
+# Logs
+*.log
+
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/
+*.iml

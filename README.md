@@ -1,0 +1,53 @@
+# mustafabatmaz-blog
+
+My personal website: a short introduction, my work experience and a small collection of technical writing. Available in Turkish and English.
+
+> **Status:** work in progress. The project is being built in phases; see the roadmap below.
+
+## Stack
+
+| Part | Technology |
+|---|---|
+| Backend | Java 21, Spring Boot, Spring Modulith, PostgreSQL, Liquibase, Maven |
+| Public site | Next.js (App Router, server-side rendering), Tailwind CSS, next-intl |
+| Admin panel | React, Vite, TanStack Query, React Hook Form, shadcn/ui |
+| Infrastructure | Docker Compose, nginx |
+| CI | GitHub Actions |
+
+## Architecture
+
+```
+public-web (Next.js, SSR) ──┐
+                            ├──▶ api (Spring Boot, modular monolith) ──▶ PostgreSQL
+admin-web (Vite + React)  ──┘
+```
+
+- The public API is read-only (`GET /api/public/**`).
+- All content is managed from the admin panel through `/api/admin/**`, protected with a JWT kept in an httpOnly cookie.
+- TypeScript types for the frontends are generated from the backend's OpenAPI spec.
+
+## Project structure
+
+```
+backend/     Spring Boot application
+frontend/    pnpm workspace: public-web, admin-web, api-client
+infra/       Docker Compose and nginx configuration
+```
+
+## Roadmap
+
+- [x] Phase 0: repository skeleton
+- [ ] Phase 1: backend foundation (Spring Boot, PostgreSQL, Liquibase, Docker)
+- [ ] Phase 2: authentication
+- [ ] Phase 3: content modules and API
+- [ ] Phase 4: admin panel
+- [ ] Phase 5: public website
+- [ ] Phase 6: full Docker stack and setup guide
+
+## Getting started
+
+Setup instructions will be added as the backend and frontends land. The whole stack will start with a single `docker compose up`.
+
+## License
+
+[MIT](LICENSE)
