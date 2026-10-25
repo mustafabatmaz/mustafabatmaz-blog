@@ -27,6 +27,12 @@ services:
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_PASSWORD_HASH: ${ADMIN_PASSWORD_HASH}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_TTL: ${JWT_TTL:-8h}
+      COOKIE_SECURE: ${COOKIE_SECURE:-true}
+      API_DOCS_ENABLED: ${API_DOCS_ENABLED:-false}
     ports:
       - "8080:8080"
     depends_on:

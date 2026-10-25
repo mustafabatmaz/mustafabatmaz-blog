@@ -38,7 +38,7 @@ infra/       Docker Compose and nginx configuration
 
 - [x] Phase 0: repository skeleton
 - [x] Phase 1: backend foundation (Spring Boot, PostgreSQL, Liquibase, Docker)
-- [ ] Phase 2: authentication
+- [x] Phase 2: authentication
 - [ ] Phase 3: content modules and API
 - [ ] Phase 4: admin panel
 - [ ] Phase 5: public website
@@ -54,6 +54,20 @@ docker compose -f infra/compose.yaml up --build
 ```
 
 The API starts on http://localhost:8080. Health check: http://localhost:8080/actuator/health
+
+### Admin credentials
+
+The admin password is stored only as a BCrypt hash in `infra/.env`. To create one (you are prompted for the password, so it never lands in your shell history):
+
+```bash
+docker run --rm -it httpd:2.4-alpine htpasswd -nBC 12 ""
+```
+
+Copy the output without the leading `:` into `ADMIN_PASSWORD_HASH`, inside single quotes. Generate the token secret with:
+
+```bash
+openssl rand -base64 32
+```
 
 Run the backend tests (Testcontainers needs Docker running):
 
