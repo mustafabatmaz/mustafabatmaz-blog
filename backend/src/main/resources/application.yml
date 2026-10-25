@@ -17,6 +17,22 @@ spring:
 server:
   port: ${SERVER_PORT:8080}
 
+blog:
+  auth:
+    # No defaults for secrets: the app refuses to start without them
+    admin-username: ${ADMIN_USERNAME}
+    admin-password-hash: ${ADMIN_PASSWORD_HASH}
+    jwt-secret: ${JWT_SECRET}
+    jwt-ttl: ${JWT_TTL:8h}
+    cookie-secure: ${COOKIE_SECURE:true}
+
+springdoc:
+  # Off unless explicitly enabled (local .env turns it on)
+  api-docs:
+    enabled: ${API_DOCS_ENABLED:false}
+  swagger-ui:
+    enabled: ${API_DOCS_ENABLED:false}
+
 management:
   endpoints:
     web:
