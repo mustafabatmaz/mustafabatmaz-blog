@@ -1,0 +1,217 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0004-experience
+      author: mustafabatmaz
+      comment: Work experience, its projects and the technologies used in them
+      changes:
+        - createTable:
+            tableName: experience
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: company
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: start_month
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: end_month
+                  type: date
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                    nullable: false
+        - sql:
+            sql: ALTER TABLE experience ADD CONSTRAINT ck_experience_dates CHECK (end_month IS NULL OR end_month >= start_month)
+        - createTable:
+            tableName: experience_translation
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: experience_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_experience_translation_experience
+                    references: experience(id)
+                    deleteCascade: true
+              - column:
+                  name: lang
+                  type: varchar(2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role_title
+                  type: varchar(150)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: summary
+                  type: varchar(2000)
+        - addUniqueConstraint:
+            tableName: experience_translation
+            columnNames: experience_id, lang
+            constraintName: uq_experience_translation_lang
+        - sql:
+            sql: ALTER TABLE experience_translation ADD CONSTRAINT ck_experience_translation_lang CHECK (lang IN ('tr', 'en'))
+
+        - createTable:
+            tableName: experience_project
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: experience_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_experience_project_experience
+                    references: experience(id)
+                    deleteCascade: true
+              - column:
+                  name: slug
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: uq_experience_project_slug
+              - column:
+                  name: sort_order
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: experience_project_translation
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: project_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_experience_project_translation_project
+                    references: experience_project(id)
+                    deleteCascade: true
+              - column:
+                  name: lang
+                  type: varchar(2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(150)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: client
+                  type: varchar(150)
+              - column:
+                  name: description
+                  type: varchar(2000)
+              - column:
+                  name: highlights_md
+                  type: text
+              - column:
+                  name: case_study_md
+                  type: text
+        - addUniqueConstraint:
+            tableName: experience_project_translation
+            columnNames: project_id, lang
+            constraintName: uq_experience_project_translation_lang
+        - sql:
+            sql: ALTER TABLE experience_project_translation ADD CONSTRAINT ck_experience_project_translation_lang CHECK (lang IN ('tr', 'en'))
+
+        - createTable:
+            tableName: technology
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+        # "Kafka" and "kafka" are the same technology
+        - sql:
+            sql: CREATE UNIQUE INDEX uq_technology_name ON technology (lower(name))
+        - createTable:
+            tableName: experience_project_technology
+            columns:
+              - column:
+                  name: project_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_experience_project_technology_project
+                    references: experience_project(id)
+                    deleteCascade: true
+              - column:
+                  name: technology_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_experience_project_technology_technology
+                    references: technology(id)
+                    deleteCascade: true
+        - addPrimaryKey:
+            tableName: experience_project_technology
+            columnNames: project_id, technology_id
+            constraintName: pk_experience_project_technology
