@@ -1,0 +1,71 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0002-page
+      author: mustafabatmaz
+      comment: Single pages (about, now) and their translations
+      changes:
+        - createTable:
+            tableName: page
+            columns:
+              - column:
+                  name: page_key
+                  type: varchar(20)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                    nullable: false
+        - sql:
+            sql: ALTER TABLE page ADD CONSTRAINT ck_page_key CHECK (page_key IN ('ABOUT', 'NOW'))
+        - createTable:
+            tableName: page_translation
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: page_key
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_page_translation_page
+                    references: page(page_key)
+                    deleteCascade: true
+              - column:
+                  name: lang
+                  type: varchar(2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: title
+                  type: varchar(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: body_md
+                  type: text
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: page_translation
+            columnNames: page_key, lang
+            constraintName: uq_page_translation_lang
+        - sql:
+            sql: ALTER TABLE page_translation ADD CONSTRAINT ck_page_translation_lang CHECK (lang IN ('tr', 'en'))

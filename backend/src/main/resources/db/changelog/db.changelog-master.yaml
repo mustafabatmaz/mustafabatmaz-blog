@@ -4,3 +4,12 @@ databaseChangeLog:
   - include:
       file: changes/0000-baseline.yaml
       relativeToChangelogFile: true
+  - include:
+      file: changes/0001-profile.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: changes/0002-page.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: changes/0003-uses.yaml
+      relativeToChangelogFile: true

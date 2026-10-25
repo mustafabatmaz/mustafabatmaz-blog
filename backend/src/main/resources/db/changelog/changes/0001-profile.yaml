@@ -1,0 +1,113 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0001-profile
+      author: mustafabatmaz
+      comment: Site owner profile (single row), its translations and social links
+      changes:
+        - createTable:
+            tableName: profile
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: full_name
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(254)
+              - column:
+                  name: location
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                    nullable: false
+        - sql:
+            sql: ALTER TABLE profile ADD CONSTRAINT ck_profile_singleton CHECK (id = 1)
+        - createTable:
+            tableName: profile_translation
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: profile_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_profile_translation_profile
+                    references: profile(id)
+                    deleteCascade: true
+              - column:
+                  name: lang
+                  type: varchar(2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: headline
+                  type: varchar(150)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: intro
+                  type: varchar(2000)
+        - addUniqueConstraint:
+            tableName: profile_translation
+            columnNames: profile_id, lang
+            constraintName: uq_profile_translation_lang
+        - sql:
+            sql: ALTER TABLE profile_translation ADD CONSTRAINT ck_profile_translation_lang CHECK (lang IN ('tr', 'en'))
+        - createTable:
+            tableName: social_link
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: profile_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_social_link_profile
+                    references: profile(id)
+                    deleteCascade: true
+              - column:
+                  name: platform
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: url
+                  type: varchar(500)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: sort_order
+                  type: int
+                  constraints:
+                    nullable: false
