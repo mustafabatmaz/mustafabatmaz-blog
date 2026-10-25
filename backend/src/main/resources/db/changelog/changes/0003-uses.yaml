@@ -1,0 +1,83 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0003-uses
+      author: mustafabatmaz
+      comment: Items on the /uses page and their translations
+      changes:
+        - createTable:
+            tableName: uses_item
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: category
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: url
+                  type: varchar(500)
+              - column:
+                  name: sort_order
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                    nullable: false
+        - sql:
+            sql: ALTER TABLE uses_item ADD CONSTRAINT ck_uses_item_category CHECK (category IN ('HARDWARE', 'DEV_TOOLS', 'SOFTWARE', 'SERVICES'))
+        - createTable:
+            tableName: uses_item_translation
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: uses_item_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_uses_item_translation_item
+                    references: uses_item(id)
+                    deleteCascade: true
+              - column:
+                  name: lang
+                  type: varchar(2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(500)
+        - addUniqueConstraint:
+            tableName: uses_item_translation
+            columnNames: uses_item_id, lang
+            constraintName: uq_uses_item_translation_lang
+        - sql:
+            sql: ALTER TABLE uses_item_translation ADD CONSTRAINT ck_uses_item_translation_lang CHECK (lang IN ('tr', 'en'))
