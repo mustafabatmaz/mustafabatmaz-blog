@@ -36,6 +36,8 @@ blog:
     max-file-size: 5MB
 
 springdoc:
+  # Responses are JSON; without this the spec says */* and generated frontend types lose the body type
+  default-produces-media-type: application/json
   # Off unless explicitly enabled (local .env turns it on)
   api-docs:
     enabled: ${API_DOCS_ENABLED:false}
