@@ -39,7 +39,7 @@ infra/       Docker Compose and nginx configuration
 - [x] Phase 0: repository skeleton
 - [x] Phase 1: backend foundation (Spring Boot, PostgreSQL, Liquibase, Docker)
 - [x] Phase 2: authentication
-- [ ] Phase 3: content modules and API
+- [x] Phase 3: content modules and API
 - [ ] Phase 4: admin panel
 - [ ] Phase 5: public website
 - [ ] Phase 6: full Docker stack and setup guide
@@ -76,7 +76,32 @@ cd backend
 ./mvnw verify
 ```
 
-Frontend setup will be added in later phases.
+### Admin panel (development)
+
+Requirements: Node 24 and pnpm (the version is pinned in `frontend/package.json`). Start PostgreSQL and the backend first; the Vite dev server proxies `/api` to http://localhost:8080, so the panel and the API share one origin, as they will behind nginx.
+
+```bash
+cd frontend
+pnpm install
+pnpm --filter @blog/admin-web dev    # http://localhost:5173
+```
+
+Checks (the same ones CI runs):
+
+```bash
+pnpm lint && pnpm typecheck && pnpm test
+```
+
+### API types
+
+The frontend's TypeScript types are generated from the backend's OpenAPI spec, which is committed as `frontend/packages/api-client/openapi.json`. After changing the API, start the backend with `API_DOCS_ENABLED=true` and regenerate:
+
+```bash
+cd frontend
+pnpm --filter @blog/api-client gen:api
+```
+
+The backend test `OpenApiSpecTests` fails when the committed spec no longer matches the API.
 
 ## License
 

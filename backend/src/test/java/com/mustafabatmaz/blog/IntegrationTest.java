@@ -38,13 +38,15 @@ public abstract class IntegrationTest {
     protected JdbcTemplate jdbc;
 
     @DynamicPropertySource
-    static void authProperties(DynamicPropertyRegistry registry) {
+    static void testProperties(DynamicPropertyRegistry registry) {
         // Cost 4 keeps the tests fast; production hashes use cost 12
         registry.add("blog.auth.admin-username", () -> ADMIN_USERNAME);
         registry.add("blog.auth.admin-password-hash", () -> new BCryptPasswordEncoder(4).encode(ADMIN_PASSWORD));
         registry.add("blog.auth.jwt-secret", () -> "dGVzdC1vbmx5LWp3dC1zZWNyZXQtZm9yLWludGVncmF0aW9uLXRlc3Rz");
         registry.add("blog.auth.cookie-secure", () -> "false");
         registry.add("blog.media.dir", MEDIA_DIR::toString);
+        // Set here rather than on OpenApiSpecTests so every test class shares one cached context
+        registry.add("springdoc.api-docs.enabled", () -> "true");
     }
 
     private static Path createMediaDir() {
