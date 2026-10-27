@@ -1,0 +1,169 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0006-content
+      author: mustafabatmaz
+      comment: Blog posts, their translations and tags
+      changes:
+        - createTable:
+            tableName: post
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: published_at
+                  type: timestamp with time zone
+              # No cascade: an image can't be deleted while a post uses it as cover
+              - column:
+                  name: cover_media_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: fk_post_cover_media
+                    references: media(id)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                    nullable: false
+        - sql:
+            sql: ALTER TABLE post ADD CONSTRAINT ck_post_status CHECK (status IN ('DRAFT', 'PUBLISHED'))
+        - sql:
+            sql: ALTER TABLE post ADD CONSTRAINT ck_post_published_has_date CHECK (status <> 'PUBLISHED' OR published_at IS NOT NULL)
+        # The public list filters on these two columns
+        - createIndex:
+            tableName: post
+            indexName: ix_post_status_published_at
+            columns:
+              - column:
+                  name: status
+              - column:
+                  name: published_at
+        - createIndex:
+            tableName: post
+            indexName: ix_post_cover_media
+            columns:
+              - column:
+                  name: cover_media_id
+
+        - createTable:
+            tableName: post_translation
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: post_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_post_translation_post
+                    references: post(id)
+                    deleteCascade: true
+              - column:
+                  name: lang
+                  type: varchar(2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: slug
+                  type: varchar(150)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: title
+                  type: varchar(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: summary
+                  type: varchar(500)
+              - column:
+                  name: body_md
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
+                  name: reading_minutes
+                  type: int
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: post_translation
+            columnNames: post_id, lang
+            constraintName: uq_post_translation_lang
+        # Each language has its own URLs: the same slug may exist once per language
+        - addUniqueConstraint:
+            tableName: post_translation
+            columnNames: lang, slug
+            constraintName: uq_post_translation_slug
+        - sql:
+            sql: ALTER TABLE post_translation ADD CONSTRAINT ck_post_translation_lang CHECK (lang IN ('tr', 'en'))
+
+        - createTable:
+            tableName: tag
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: slug
+                  type: varchar(60)
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: uq_tag_slug
+        - createTable:
+            tableName: post_tag
+            columns:
+              - column:
+                  name: post_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_post_tag_post
+                    references: post(id)
+                    deleteCascade: true
+              - column:
+                  name: tag_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_post_tag_tag
+                    references: tag(id)
+                    deleteCascade: true
+        - addPrimaryKey:
+            tableName: post_tag
+            columnNames: post_id, tag_id
+            constraintName: pk_post_tag
