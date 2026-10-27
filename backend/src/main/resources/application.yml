@@ -13,6 +13,11 @@ spring:
       ddl-auto: validate
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
+  servlet:
+    multipart:
+      # Spring's default is 1MB; requests above these limits get 413 before reaching our code
+      max-file-size: 5MB
+      max-request-size: 6MB
 
 server:
   port: ${SERVER_PORT:8080}
@@ -25,6 +30,10 @@ blog:
     jwt-secret: ${JWT_SECRET}
     jwt-ttl: ${JWT_TTL:8h}
     cookie-secure: ${COOKIE_SECURE:true}
+  media:
+    # Outside the repository, so uploads can never be committed by accident
+    dir: ${MEDIA_DIR:${user.home}/.mustafabatmaz-blog/media}
+    max-file-size: 5MB
 
 springdoc:
   # Off unless explicitly enabled (local .env turns it on)

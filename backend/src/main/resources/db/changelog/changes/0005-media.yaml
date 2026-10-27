@@ -1,0 +1,92 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0005-media
+      author: mustafabatmaz
+      comment: Uploaded images (files live on disk, named by storage_key) and their alt texts
+      changes:
+        - createTable:
+            tableName: media
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: storage_key
+                  type: varchar(60)
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: uq_media_storage_key
+              - column:
+                  name: format
+                  type: varchar(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: size_bytes
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: original_filename
+                  type: varchar(255)
+              - column:
+                  name: metadata_stripped
+                  type: boolean
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                    nullable: false
+        - sql:
+            sql: ALTER TABLE media ADD CONSTRAINT ck_media_format CHECK (format IN ('JPEG', 'PNG', 'WEBP', 'AVIF'))
+        - createTable:
+            tableName: media_translation
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: media_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_media_translation_media
+                    references: media(id)
+                    deleteCascade: true
+              - column:
+                  name: lang
+                  type: varchar(2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: alt_text
+                  type: varchar(300)
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: media_translation
+            columnNames: media_id, lang
+            constraintName: uq_media_translation_lang
+        - sql:
+            sql: ALTER TABLE media_translation ADD CONSTRAINT ck_media_translation_lang CHECK (lang IN ('tr', 'en'))

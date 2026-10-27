@@ -33,6 +33,9 @@ services:
       JWT_TTL: ${JWT_TTL:-8h}
       COOKIE_SECURE: ${COOKIE_SECURE:-true}
       API_DOCS_ENABLED: ${API_DOCS_ENABLED:-false}
+      MEDIA_DIR: /var/lib/blog/media
+    volumes:
+      - media:/var/lib/blog/media
     ports:
       - "8080:8080"
     depends_on:
@@ -47,3 +50,4 @@ services:
 
 volumes:
   pgdata:
+  media:

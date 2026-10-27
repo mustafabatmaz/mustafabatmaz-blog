@@ -18,7 +18,10 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends curl \
     && rm -rf /var/lib/apt/lists/* \
     && groupadd --system app \
-    && useradd --system --gid app --no-create-home app
+    && useradd --system --gid app --no-create-home app \
+    # A new named volume copies this folder's owner, so the app user can write uploads
+    && mkdir -p /var/lib/blog/media \
+    && chown app:app /var/lib/blog/media
 WORKDIR /app
 
 # Spring Boot layers, least to most frequently changing
