@@ -30,7 +30,7 @@ admin-web (Vite + React)  ──┘
 
 ```
 backend/     Spring Boot application
-frontend/    pnpm workspace: public-web, admin-web, api-client
+frontend/    pnpm workspace: admin-web, public-web, api-client (generated API types), markdown (shared renderer)
 infra/       Docker Compose and nginx configuration
 ```
 
