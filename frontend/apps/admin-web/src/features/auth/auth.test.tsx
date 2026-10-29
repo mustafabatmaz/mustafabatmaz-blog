@@ -1,29 +1,10 @@
 import { screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { HttpResponse } from "msw/http";
 import { describe, expect, it } from "vitest";
 import { api, unwrap } from "@/lib/api";
+import { problem, signedIn, signedOut } from "@/test/handlers";
 import { renderApp } from "@/test/renderApp";
 import { http, server } from "@/test/server";
-
-function problem(status: number, detail: string) {
-  return HttpResponse.json(
-    { type: "about:blank", status, detail },
-    { status, headers: { "Content-Type": "application/problem+json" } },
-  );
-}
-
-function signedIn() {
-  return http.get("/api/admin/auth/me", ({ response }) =>
-    response(200).json({ username: "mustafa" }),
-  );
-}
-
-function signedOut() {
-  return http.get("/api/admin/auth/me", ({ response }) =>
-    response.untyped(problem(401, "Authentication required")),
-  );
-}
 
 async function fillAndSubmit(username: string, password: string) {
   const user = userEvent.setup();

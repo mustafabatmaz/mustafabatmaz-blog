@@ -17,6 +17,18 @@ interface FetchResult<T> {
   response: Response;
 }
 
+// For records that exist only after their first save (profile, pages): 404 means "not saved yet"
+export async function nullIfNotFound<T>(request: Promise<T>): Promise<T | null> {
+  try {
+    return await request;
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 404) {
+      return null;
+    }
+    throw error;
+  }
+}
+
 // openapi-fetch returns errors as values; TanStack Query expects a rejected promise
 export async function unwrap<T>(request: Promise<FetchResult<T>>): Promise<T> {
   const { data, error, response } = await request;

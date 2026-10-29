@@ -4,6 +4,9 @@ import { ComingSoon } from "@/components/layout/ComingSoon";
 import { NotFound } from "@/components/layout/NotFound";
 import { LoginPage } from "@/features/auth/LoginPage";
 import { RequireAuth } from "@/features/auth/RequireAuth";
+import { PagesPage } from "@/features/pages/PagesPage";
+import { ProfilePage } from "@/features/profile/ProfilePage";
+import { UsesPage } from "@/features/uses/UsesPage";
 import { tr } from "@/i18n/tr";
 
 // Exported so tests can mount the same tree in a memory router
@@ -21,9 +24,15 @@ export const routes: RouteObject[] = [
           { path: "posts", element: <ComingSoon title={tr.nav.posts} /> },
           { path: "media", element: <ComingSoon title={tr.nav.media} /> },
           { path: "experience", element: <ComingSoon title={tr.nav.experience} /> },
-          { path: "pages", element: <ComingSoon title={tr.nav.pages} /> },
-          { path: "uses", element: <ComingSoon title={tr.nav.uses} /> },
-          { path: "profile", element: <ComingSoon title={tr.nav.profile} /> },
+          {
+            path: "pages",
+            children: [
+              { index: true, element: <Navigate to="about" replace /> },
+              { path: ":slug", Component: PagesPage },
+            ],
+          },
+          { path: "uses", Component: UsesPage },
+          { path: "profile", Component: ProfilePage },
           { path: "*", Component: NotFound },
         ],
       },

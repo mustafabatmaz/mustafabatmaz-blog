@@ -36,6 +36,8 @@
   --color-mint: var(--mint);
   --color-mint-foreground: var(--mint-foreground);
   --color-link: var(--link);
+  --color-code: var(--code);
+  --color-code-foreground: var(--code-foreground);
   --color-monogram: var(--monogram);
   --color-monogram-m: var(--monogram-m);
   --color-monogram-b: var(--monogram-b);
@@ -84,6 +86,8 @@
   --mint: #d6eeeb;
   --mint-foreground: #22625d;
   --link: #4c56b8;
+  --code: #191b33;
+  --code-foreground: #e7e8f3;
   --monogram: #e1e4f8;
   --monogram-m: #191b33;
   --monogram-b: #4c56b8;
@@ -122,6 +126,8 @@
   --mint: #173533;
   --mint-foreground: #9ed8d1;
   --link: #a3acf0;
+  --code: #1a1c2c;
+  --code-foreground: #e7e8f3;
   --monogram: #22254a;
   --monogram-m: #ffffff;
   --monogram-b: #a3acf0;
