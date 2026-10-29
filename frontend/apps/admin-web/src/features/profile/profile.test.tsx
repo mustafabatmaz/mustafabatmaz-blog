@@ -150,7 +150,13 @@ describe("profile", () => {
       ),
       http.put("/api/admin/profile", ({ response }) => {
         version = 4;
-        return response.untyped(problem(409, "The change conflicts with existing data"));
+        return response.untyped(
+          problem(
+            409,
+            "The record was changed elsewhere; reload it and try again",
+            "https://mustafabatmaz.com/problems/version-conflict",
+          ),
+        );
       }),
     );
     const { user } = await openProfile();

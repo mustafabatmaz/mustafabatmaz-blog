@@ -1,13 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { tr } from "@/i18n/tr";
-import { ApiError } from "@/lib/problem";
+import { isProblem, PROBLEM_TYPES } from "@/lib/problem";
 
-// Errors stay on the page until the next attempt; a 409 means someone saved a newer version meanwhile
+// Errors stay on the page until the next attempt. Only a version conflict offers a reload: reloading
+// can't fix other problems (a taken slug is shown on its field by the form itself).
 export function SaveErrorAlert({ error, onReload }: { error: Error | null; onReload: () => void }) {
   if (!error) {
     return null;
   }
-  const conflict = error instanceof ApiError && error.status === 409;
+  const conflict = isProblem(error, PROBLEM_TYPES.versionConflict);
   return (
     <div
       role="alert"

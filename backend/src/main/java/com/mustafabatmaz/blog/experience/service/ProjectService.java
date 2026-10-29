@@ -4,6 +4,7 @@ import com.mustafabatmaz.blog.common.BadRequestException;
 import com.mustafabatmaz.blog.common.ConflictException;
 import com.mustafabatmaz.blog.common.Language;
 import com.mustafabatmaz.blog.common.NotFoundException;
+import com.mustafabatmaz.blog.common.ProblemTypes;
 import com.mustafabatmaz.blog.common.Translations;
 import com.mustafabatmaz.blog.experience.domain.Experience;
 import com.mustafabatmaz.blog.experience.domain.ExperienceProject;
@@ -160,6 +161,6 @@ public class ProjectService {
     }
 
     private static ConflictException slugTaken() {
-        return new ConflictException("The slug is already used by another project");
+        return new ConflictException("The slug is already used by another project", ProblemTypes.SLUG_TAKEN);
     }
 }

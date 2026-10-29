@@ -5,6 +5,7 @@ import com.mustafabatmaz.blog.common.ConflictException;
 import com.mustafabatmaz.blog.common.Language;
 import com.mustafabatmaz.blog.common.NotFoundException;
 import com.mustafabatmaz.blog.common.PageResponse;
+import com.mustafabatmaz.blog.common.ProblemTypes;
 import com.mustafabatmaz.blog.common.Slugs;
 import com.mustafabatmaz.blog.common.Translations;
 import com.mustafabatmaz.blog.content.domain.Post;
@@ -192,7 +193,8 @@ public class PostService {
                     ? translationRepository.existsByLangAndSlug(t.lang(), t.slug())
                     : translationRepository.existsByLangAndSlugAndPost_IdNot(t.lang(), t.slug(), postId);
             if (taken) {
-                throw new ConflictException("The slug \"" + t.slug() + "\" is already used in this language");
+                throw new ConflictException(
+                        "The slug \"" + t.slug() + "\" is already used in this language", ProblemTypes.SLUG_TAKEN);
             }
         }
     }

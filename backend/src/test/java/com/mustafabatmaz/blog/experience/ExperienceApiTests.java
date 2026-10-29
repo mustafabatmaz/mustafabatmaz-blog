@@ -93,7 +93,8 @@ class ExperienceApiTests extends IntegrationTest {
 
         mockMvc.perform(asAdmin(
                         post(ADMIN + "/" + company + "/projects"), projectJson("turkpatent", "Again", null, null)))
-                .andExpect(status().isConflict());
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.type").value("https://mustafabatmaz.com/problems/slug-taken"));
     }
 
     @Test
@@ -168,7 +169,8 @@ class ExperienceApiTests extends IntegrationTest {
 
         mockMvc.perform(asAdmin(
                         put("/api/admin/projects/" + project), projectJson("turkpatent", "TÜRKPATENT", null, 4L)))
-                .andExpect(status().isConflict());
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.type").value("https://mustafabatmaz.com/problems/version-conflict"));
     }
 
     @Test

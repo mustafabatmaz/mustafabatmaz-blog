@@ -3,9 +3,9 @@ import { http } from "./server";
 
 // RFC 9457 error body, the way the backend sends it. Error responses aren't in the spec, so handlers wrap
 // this in response.untyped(...).
-export function problem(status: number, detail: string) {
+export function problem(status: number, detail: string, type = "about:blank") {
   return HttpResponse.json(
-    { type: "about:blank", status, detail },
+    { type, status, detail },
     { status, headers: { "Content-Type": "application/problem+json" } },
   );
 }

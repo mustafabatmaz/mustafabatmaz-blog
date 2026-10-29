@@ -68,10 +68,10 @@ describe("api", () => {
         response.untyped(
           HttpResponse.json(
             {
-              type: "about:blank",
+              type: "https://mustafabatmaz.com/problems/version-conflict",
               title: "Conflict",
               status: 409,
-              detail: "The change conflicts with existing data",
+              detail: "The record was changed elsewhere; reload it and try again",
             },
             { status: 409, headers: { "Content-Type": "application/problem+json" } },
           ),
@@ -84,8 +84,9 @@ describe("api", () => {
     expect(error).toBeInstanceOf(ApiError);
     expect(error).toMatchObject({
       status: 409,
+      type: "https://mustafabatmaz.com/problems/version-conflict",
       title: "Conflict",
-      detail: "The change conflicts with existing data",
+      detail: "The record was changed elsewhere; reload it and try again",
     });
   });
 
