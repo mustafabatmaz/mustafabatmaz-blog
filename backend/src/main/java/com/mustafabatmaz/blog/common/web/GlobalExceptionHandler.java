@@ -24,9 +24,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ApiException.class)
     ResponseEntity<ProblemDetail> handleApiException(ApiException ex) {
-        return ResponseEntity.status(ex.getStatus())
-                .headers(ex.getHeaders())
-                .body(ProblemDetail.forStatusAndDetail(ex.getStatus(), ex.getMessage()));
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(ex.getStatus(), ex.getMessage());
+        if (ex.getType() != null) {
+            problem.setType(ex.getType());
+        }
+        return ResponseEntity.status(ex.getStatus()).headers(ex.getHeaders()).body(problem);
     }
 
     @ExceptionHandler(AuthenticationException.class)

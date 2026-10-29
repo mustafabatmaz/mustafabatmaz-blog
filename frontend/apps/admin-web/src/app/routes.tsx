@@ -4,6 +4,8 @@ import { ComingSoon } from "@/components/layout/ComingSoon";
 import { NotFound } from "@/components/layout/NotFound";
 import { LoginPage } from "@/features/auth/LoginPage";
 import { RequireAuth } from "@/features/auth/RequireAuth";
+import { ExperiencePage } from "@/features/experience/ExperiencePage";
+import { ProjectPage } from "@/features/experience/ProjectPage";
 import { PagesPage } from "@/features/pages/PagesPage";
 import { ProfilePage } from "@/features/profile/ProfilePage";
 import { UsesPage } from "@/features/uses/UsesPage";
@@ -23,7 +25,9 @@ export const routes: RouteObject[] = [
           // Each section replaces its placeholder in its own sub-phase (4b–4e)
           { path: "posts", element: <ComingSoon title={tr.nav.posts} /> },
           { path: "media", element: <ComingSoon title={tr.nav.media} /> },
-          { path: "experience", element: <ComingSoon title={tr.nav.experience} /> },
+          { path: "experience", Component: ExperiencePage },
+          { path: "experience/projects/:id", Component: ProjectPage },
+          { path: "experience/:experienceId/projects/new", Component: ProjectPage },
           {
             path: "pages",
             children: [

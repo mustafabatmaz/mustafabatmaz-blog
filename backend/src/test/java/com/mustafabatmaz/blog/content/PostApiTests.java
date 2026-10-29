@@ -208,7 +208,8 @@ class PostApiTests extends IntegrationTest {
         create(postJson("DRAFT", null, null, "[" + tr("ayni", "Bir") + "]", null));
 
         mockMvc.perform(asAdmin(post(ADMIN), postJson("DRAFT", null, null, "[" + tr("ayni", "İki") + "]", null)))
-                .andExpect(status().isConflict());
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.type").value("https://mustafabatmaz.com/problems/slug-taken"));
     }
 
     @Test
@@ -230,7 +231,8 @@ class PostApiTests extends IntegrationTest {
         long id = id(create(postJson("DRAFT", null, null, "[" + tr("v", "V") + "]", null)));
 
         mockMvc.perform(asAdmin(put(ADMIN + "/" + id), postJson("DRAFT", null, null, "[" + tr("v", "V") + "]", 7L)))
-                .andExpect(status().isConflict());
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.type").value("https://mustafabatmaz.com/problems/version-conflict"));
     }
 
     // ---- cover image (cross-module) ----
