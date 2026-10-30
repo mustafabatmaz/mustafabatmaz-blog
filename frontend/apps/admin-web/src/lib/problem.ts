@@ -11,6 +11,7 @@ interface ProblemDetail {
 export const PROBLEM_TYPES = {
   versionConflict: "https://mustafabatmaz.com/problems/version-conflict",
   slugTaken: "https://mustafabatmaz.com/problems/slug-taken",
+  mediaInUse: "https://mustafabatmaz.com/problems/media-in-use",
 } as const;
 
 export class ApiError extends Error {

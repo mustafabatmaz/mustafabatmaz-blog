@@ -258,7 +258,12 @@ class PostApiTests extends IntegrationTest {
         long cover = uploadCover();
         create(postJson("DRAFT", null, cover, "[" + tr("x", "X") + "]", null));
 
-        mockMvc.perform(asAdmin(delete("/api/admin/media/" + cover))).andExpect(status().isConflict());
+        mockMvc.perform(asAdmin(delete("/api/admin/media/" + cover)))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.type").value("https://mustafabatmaz.com/problems/media-in-use"));
+        // The failed delete left the image in place
+        mockMvc.perform(asAdmin(get("/api/admin/media")))
+                .andExpect(jsonPath("$[0].id").value(cover));
     }
 
     // ---- admin ----

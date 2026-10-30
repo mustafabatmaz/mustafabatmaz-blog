@@ -1,8 +1,10 @@
 package com.mustafabatmaz.blog.media.service;
 
 import com.mustafabatmaz.blog.common.BadRequestException;
+import com.mustafabatmaz.blog.common.ConflictException;
 import com.mustafabatmaz.blog.common.Language;
 import com.mustafabatmaz.blog.common.NotFoundException;
+import com.mustafabatmaz.blog.common.ProblemTypes;
 import com.mustafabatmaz.blog.common.Translations;
 import com.mustafabatmaz.blog.media.config.MediaProperties;
 import com.mustafabatmaz.blog.media.domain.ImageFormat;
@@ -22,6 +24,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronization;
@@ -86,14 +89,19 @@ public class MediaService {
     }
 
     /**
-     * Rejected with 409 while a post still uses the image (foreign key). The file is removed only
-     * after the row is gone for good, so a failed delete never leaves a row without its file.
+     * Rejected with 409 while a post still uses the image (foreign key). This module can't know which post
+     * (content depends on media, not the other way round), so the database constraint is the check. The file
+     * is removed only after the row is gone for good, so a failed delete never leaves a row without its file.
      */
     @Transactional
     public void delete(long id) {
         Media media = load(id);
         repository.delete(media);
-        repository.flush();
+        try {
+            repository.flush();
+        } catch (DataIntegrityViolationException ex) {
+            throw new ConflictException("The image is in use and can't be deleted", ProblemTypes.MEDIA_IN_USE);
+        }
         String key = media.getStorageKey();
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override
