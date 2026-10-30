@@ -40,7 +40,7 @@ infra/       Docker Compose and nginx configuration
 - [x] Phase 1: backend foundation (Spring Boot, PostgreSQL, Liquibase, Docker)
 - [x] Phase 2: authentication
 - [x] Phase 3: content modules and API
-- [ ] Phase 4: admin panel
+- [x] Phase 4: admin panel
 - [ ] Phase 5: public website
 - [ ] Phase 6: full Docker stack and setup guide
 
@@ -53,7 +53,10 @@ cp infra/.env.example infra/.env    # then edit the values
 docker compose -f infra/compose.yaml up --build
 ```
 
-The API starts on http://localhost:8080. Health check: http://localhost:8080/actuator/health
+This starts PostgreSQL, the API and the admin panel:
+
+- Admin panel: http://localhost:8081 (nginx serves the app and passes `/api` to the backend)
+- API: http://localhost:8080, reachable from this machine only. Health check: http://localhost:8080/actuator/health
 
 ### Admin credentials
 
@@ -89,8 +92,10 @@ pnpm --filter @blog/admin-web dev    # http://localhost:5173
 Checks (the same ones CI runs):
 
 ```bash
-pnpm lint && pnpm typecheck && pnpm test
+pnpm lint && pnpm typecheck && pnpm test && pnpm -r build
 ```
+
+The Docker image is built from `frontend/apps/admin-web/Dockerfile` (static files served by nginx, config in `infra/nginx/`); `docker compose -f infra/compose.yaml up --build admin-web` rebuilds it.
 
 ### API types
 
