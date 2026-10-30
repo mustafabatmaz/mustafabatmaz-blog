@@ -1,11 +1,9 @@
 package com.mustafabatmaz.blog.content.service;
 
 import com.mustafabatmaz.blog.common.BadRequestException;
-import com.mustafabatmaz.blog.common.ConflictException;
 import com.mustafabatmaz.blog.common.Language;
 import com.mustafabatmaz.blog.common.NotFoundException;
 import com.mustafabatmaz.blog.common.PageResponse;
-import com.mustafabatmaz.blog.common.ProblemTypes;
 import com.mustafabatmaz.blog.common.Slugs;
 import com.mustafabatmaz.blog.common.Translations;
 import com.mustafabatmaz.blog.content.domain.Post;
@@ -187,15 +185,16 @@ public class PostService {
         }
     }
 
+    /** Checks every language first, so the client can mark all taken slugs at once. */
     private void checkSlugsAreFree(List<PostTranslationDto> translations, Long postId) {
-        for (PostTranslationDto t : translations) {
-            boolean taken = postId == null
-                    ? translationRepository.existsByLangAndSlug(t.lang(), t.slug())
-                    : translationRepository.existsByLangAndSlugAndPost_IdNot(t.lang(), t.slug(), postId);
-            if (taken) {
-                throw new ConflictException(
-                        "The slug \"" + t.slug() + "\" is already used in this language", ProblemTypes.SLUG_TAKEN);
-            }
+        List<Language> taken = translations.stream()
+                .filter(t -> postId == null
+                        ? translationRepository.existsByLangAndSlug(t.lang(), t.slug())
+                        : translationRepository.existsByLangAndSlugAndPost_IdNot(t.lang(), t.slug(), postId))
+                .map(PostTranslationDto::lang)
+                .toList();
+        if (!taken.isEmpty()) {
+            throw new SlugTakenException(taken);
         }
     }
 

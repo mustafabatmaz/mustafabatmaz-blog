@@ -1,16 +1,31 @@
+import { cn } from "cn";
+import { StatusBadge } from "@/components/layout/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { tr } from "@/i18n/tr";
 import { formatDate } from "@/lib/format";
 import { formatBytes } from "./mediaFiles";
 import { altLanguages, mediaName, type MediaItem } from "./mediaSchema";
-import { StatusBadge } from "./StatusBadge";
 
-// Kept free of page state so the post cover picker (4e) can show the same card
-export function MediaCard({ item, onEdit }: { item: MediaItem; onEdit: () => void }) {
+interface MediaCardProps {
+  item: MediaItem;
+  // "Düzenle" on the media page, "Seç" in the post cover picker
+  actionLabel: string;
+  actionName: (name: string) => string;
+  onAction: () => void;
+  // Shown instead of the action, e.g. for the post's current cover
+  current?: string | undefined;
+}
+
+export function MediaCard({ item, actionLabel, actionName, onAction, current }: MediaCardProps) {
   const name = mediaName(item);
   const languages = altLanguages(item);
   return (
-    <div className="flex h-full flex-col overflow-hidden rounded-2xl border bg-card">
+    <div
+      className={cn(
+        "flex h-full flex-col overflow-hidden rounded-2xl border bg-card",
+        current && "border-2 border-primary",
+      )}
+    >
       {/* The file name next to it already says what this is, so the thumbnail is decorative here */}
       <img
         src={item.url}
@@ -36,15 +51,21 @@ export function MediaCard({ item, onEdit }: { item: MediaItem; onEdit: () => voi
             <StatusBadge tone="danger">{tr.media.notStrippedBadge}</StatusBadge>
           )}
         </div>
-        <Button
-          variant="outline"
-          size="sm"
-          className="self-start"
-          aria-label={tr.media.editLabel(name)}
-          onClick={onEdit}
-        >
-          {tr.media.edit}
-        </Button>
+        {current ? (
+          <span className="inline-flex h-9 items-center self-start rounded-full bg-mint px-3.5 text-sm font-semibold text-mint-foreground">
+            {current}
+          </span>
+        ) : (
+          <Button
+            variant="outline"
+            size="sm"
+            className="self-start"
+            aria-label={actionName(name)}
+            onClick={onAction}
+          >
+            {actionLabel}
+          </Button>
+        )}
       </div>
     </div>
   );

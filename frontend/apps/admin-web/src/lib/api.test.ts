@@ -2,7 +2,8 @@ import { HttpResponse } from "msw/http";
 import { describe, expect, it } from "vitest";
 import { http, server } from "@/test/server";
 import { api, unwrap } from "./api";
-import { ApiError } from "./problem";
+import { problem } from "@/test/handlers";
+import { ApiError, PROBLEM_TYPES } from "./problem";
 
 describe("api", () => {
   it("shouldSendCsrfTokenFromCookie_whenRequestChangesData", async () => {
@@ -88,6 +89,23 @@ describe("api", () => {
       title: "Conflict",
       detail: "The record was changed elsewhere; reload it and try again",
     });
+  });
+
+  it("shouldReadTakenLanguages_whenProblemNamesThem", async () => {
+    server.use(
+      http.get("/api/admin/auth/me", ({ response }) =>
+        response.untyped(
+          problem(409, "The slug is already used", PROBLEM_TYPES.slugTaken, {
+            languages: ["en", "de", 3],
+          }),
+        ),
+      ),
+    );
+
+    const error = await unwrap(api.GET("/api/admin/auth/me")).catch((e: unknown) => e);
+
+    // Unknown values are dropped rather than trusted
+    expect(error).toMatchObject({ status: 409, languages: ["en"] });
   });
 
   it("shouldThrowApiErrorWithStatusOnly_whenErrorBodyIsNotProblemDetail", async () => {

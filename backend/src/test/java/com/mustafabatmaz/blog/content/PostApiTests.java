@@ -213,6 +213,36 @@ class PostApiTests extends IntegrationTest {
     }
 
     @Test
+    void shouldNameTheLanguage_whoseSlugIsTaken() throws Exception {
+        create(postJson("DRAFT", null, null, "[" + en("taken-in-english", "One") + "]", null));
+
+        mockMvc.perform(asAdmin(
+                        post(ADMIN),
+                        postJson(
+                                "DRAFT",
+                                null,
+                                null,
+                                "[" + tr("bos-slug", "İki") + "," + en("taken-in-english", "Two") + "]",
+                                null)))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.type").value("https://mustafabatmaz.com/problems/slug-taken"))
+                .andExpect(jsonPath("$.languages", contains("en")));
+    }
+
+    @Test
+    void shouldNameEveryLanguage_whenSlugsAreTakenInBoth() throws Exception {
+        create(postJson("DRAFT", null, null, "[" + tr("dolu", "Bir") + "," + en("taken", "One") + "]", null));
+        long other = id(create(postJson("DRAFT", null, null, "[" + tr("baska", "Başka") + "]", null)));
+
+        mockMvc.perform(asAdmin(
+                        put(ADMIN + "/" + other),
+                        postJson(
+                                "DRAFT", null, null, "[" + tr("dolu", "Başka") + "," + en("taken", "Other") + "]", 0L)))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.languages", contains("tr", "en")));
+    }
+
+    @Test
     void shouldAllowSameSlug_inDifferentLanguages() throws Exception {
         create(postJson("DRAFT", null, null, "[" + tr("docker", "Docker") + "]", null));
 

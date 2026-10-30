@@ -88,7 +88,9 @@ export function MediaPage() {
                 <li key={item.id}>
                   <MediaCard
                     item={item}
-                    onEdit={() => {
+                    actionLabel={tr.media.edit}
+                    actionName={tr.media.editLabel}
+                    onAction={() => {
                       setEditingId(item.id);
                     }}
                   />

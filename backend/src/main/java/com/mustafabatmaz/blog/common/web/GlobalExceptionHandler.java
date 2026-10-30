@@ -28,6 +28,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         if (ex.getType() != null) {
             problem.setType(ex.getType());
         }
+        ex.getProperties().forEach(problem::setProperty);
         return ResponseEntity.status(ex.getStatus()).headers(ex.getHeaders()).body(problem);
     }
 
