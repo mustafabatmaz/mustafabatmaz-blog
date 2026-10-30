@@ -4,7 +4,9 @@ import { tr } from "@/i18n/tr";
 import { isSlug } from "@/lib/slug";
 import { fromTranslations, toTranslations, translationsSchema } from "@/lib/translations";
 import type { Project } from "./experienceSchema";
-import { MAX_TECHNOLOGIES } from "./technologies";
+
+// Same limit as the backend's ProjectAdminRequest
+export const MAX_TECHNOLOGIES = 30;
 
 export const projectSchema = z.object({
   slug: z

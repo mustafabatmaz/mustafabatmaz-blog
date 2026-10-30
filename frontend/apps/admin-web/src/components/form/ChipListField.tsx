@@ -2,20 +2,30 @@ import { Autocomplete } from "@base-ui/react/autocomplete";
 import { XIcon } from "lucide-react";
 import { useState } from "react";
 import { useAnnounce } from "@/components/announcer/useAnnounce";
-import type { FieldProps } from "@/components/form/FormField";
-import { tr } from "@/i18n/tr";
-import { addTechnology, removeTechnology } from "./technologies";
+import { addChip, removeChip } from "@/lib/chips";
+import type { FieldProps } from "./FormField";
 
-interface TechnologiesFieldProps {
+export interface ChipListTexts {
+  placeholder: string;
+  addHint: (name: string) => string;
+  remove: (name: string) => string;
+  added: (name: string) => string;
+  removed: (name: string) => string;
+}
+
+interface ChipListFieldProps {
   field: FieldProps;
   value: string[];
   onChange: (value: string[]) => void;
   known: readonly string[];
+  max: number;
+  texts: ChipListTexts;
 }
 
-// Chips are ours; Base UI Autocomplete provides the suggestion popup and its keyboard handling.
-// Autocomplete (unlike Combobox) accepts free text, so technologies the backend doesn't know yet can be typed.
-export function TechnologiesField({ field, value, onChange, known }: TechnologiesFieldProps) {
+// Name lists like technologies and tags. Chips are ours; Base UI Autocomplete provides the suggestion popup
+// and its keyboard handling. Autocomplete (unlike Combobox) accepts free text, so names the backend doesn't
+// know yet can be typed.
+export function ChipListField({ field, value, onChange, known, max, texts }: ChipListFieldProps) {
   const [input, setInput] = useState("");
   const [highlighted, setHighlighted] = useState<string>();
   const announce = useAnnounce();
@@ -25,17 +35,17 @@ export function TechnologiesField({ field, value, onChange, known }: Technologie
   );
 
   const add = (name: string) => {
-    const next = addTechnology(value, name, known);
+    const next = addChip(value, name, known, max);
     if (next !== value) {
       onChange([...next]);
-      announce(tr.experience.technologyAdded(next.at(-1) ?? name));
+      announce(texts.added(next.at(-1) ?? name));
     }
     setInput("");
   };
 
   const remove = (name: string) => {
-    onChange(removeTechnology(value, name));
-    announce(tr.experience.technologyRemoved(name));
+    onChange(removeChip(value, name));
+    announce(texts.removed(name));
   };
 
   return (
@@ -48,7 +58,7 @@ export function TechnologiesField({ field, value, onChange, known }: Technologie
           {name}
           <button
             type="button"
-            aria-label={tr.experience.removeTechnology(name)}
+            aria-label={texts.remove(name)}
             className="flex size-5.5 items-center justify-center rounded-full hover:bg-mint-foreground/10"
             onClick={() => {
               remove(name);
@@ -75,10 +85,10 @@ export function TechnologiesField({ field, value, onChange, known }: Technologie
       >
         <Autocomplete.Input
           {...field}
-          placeholder={tr.experience.technologyPlaceholder}
+          placeholder={texts.placeholder}
           className="h-7.5 min-w-30 flex-1 bg-transparent text-[15px] outline-none placeholder:text-muted-foreground"
           onKeyDown={(event) => {
-            // Enter with no highlighted suggestion adds the typed text as a new technology
+            // Enter with no highlighted suggestion adds the typed text as a new name
             if (event.key === "Enter" && !highlighted) {
               event.preventDefault();
               add(input);
@@ -94,7 +104,7 @@ export function TechnologiesField({ field, value, onChange, known }: Technologie
               <Autocomplete.Empty>
                 {input.trim() && (
                   <p className="px-3 py-2 text-sm text-muted-foreground">
-                    {tr.experience.addTechnologyHint(input.trim())}
+                    {texts.addHint(input.trim())}
                   </p>
                 )}
               </Autocomplete.Empty>

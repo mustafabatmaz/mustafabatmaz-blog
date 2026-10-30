@@ -1,16 +1,16 @@
 import { Navigate, type RouteObject } from "react-router";
 import { AdminLayout } from "@/components/layout/AdminLayout";
-import { ComingSoon } from "@/components/layout/ComingSoon";
 import { NotFound } from "@/components/layout/NotFound";
 import { LoginPage } from "@/features/auth/LoginPage";
 import { RequireAuth } from "@/features/auth/RequireAuth";
 import { ExperiencePage } from "@/features/experience/ExperiencePage";
 import { MediaPage } from "@/features/media/MediaPage";
+import { PostPage } from "@/features/posts/PostPage";
+import { PostsPage } from "@/features/posts/PostsPage";
 import { ProjectPage } from "@/features/experience/ProjectPage";
 import { PagesPage } from "@/features/pages/PagesPage";
 import { ProfilePage } from "@/features/profile/ProfilePage";
 import { UsesPage } from "@/features/uses/UsesPage";
-import { tr } from "@/i18n/tr";
 
 // Exported so tests can mount the same tree in a memory router
 export const routes: RouteObject[] = [
@@ -23,8 +23,9 @@ export const routes: RouteObject[] = [
         Component: AdminLayout,
         children: [
           { index: true, element: <Navigate to="/posts" replace /> },
-          // Each section replaces its placeholder in its own sub-phase (4b–4e)
-          { path: "posts", element: <ComingSoon title={tr.nav.posts} /> },
+          { path: "posts", Component: PostsPage },
+          { path: "posts/new", Component: PostPage },
+          { path: "posts/:id", Component: PostPage },
           { path: "media", Component: MediaPage },
           { path: "experience", Component: ExperiencePage },
           { path: "experience/projects/:id", Component: ProjectPage },

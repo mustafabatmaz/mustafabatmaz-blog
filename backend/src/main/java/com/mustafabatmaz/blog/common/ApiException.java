@@ -1,6 +1,7 @@
 package com.mustafabatmaz.blog.common;
 
 import java.net.URI;
+import java.util.Map;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
@@ -36,5 +37,10 @@ public abstract class ApiException extends RuntimeException {
     /** Extra response headers, e.g. Retry-After. */
     public HttpHeaders getHeaders() {
         return new HttpHeaders();
+    }
+
+    /** Extension members of the problem detail (RFC 9457 §3.2), rendered next to "type" and "detail". */
+    public Map<String, Object> getProperties() {
+        return Map.of();
     }
 }

@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router";
+import { ChipListField } from "@/components/form/ChipListField";
 import { FormField } from "@/components/form/FormField";
 import { FormSection } from "@/components/form/FormSection";
 import { SaveErrorAlert } from "@/components/form/SaveErrorAlert";
@@ -18,11 +19,17 @@ import { isProblem, PROBLEM_TYPES } from "@/lib/problem";
 import { slugify } from "@/lib/slug";
 import { firstLanguageWithErrors, type Language } from "@/lib/translations";
 import { hasCaseStudy, type Experience, type Project } from "./experienceSchema";
-import { fromProject, projectSchema, toProjectRequest } from "./projectSchema";
-import { MAX_TECHNOLOGIES } from "./technologies";
-import { TechnologiesField } from "./TechnologiesField";
+import { fromProject, MAX_TECHNOLOGIES, projectSchema, toProjectRequest } from "./projectSchema";
 import { useExperiences } from "./useExperiences";
 import { useSaveProject, useTechnologies } from "./useProjects";
+
+const technologyTexts = {
+  placeholder: tr.experience.technologyPlaceholder,
+  addHint: tr.experience.addTechnologyHint,
+  remove: tr.experience.removeTechnology,
+  added: tr.experience.technologyAdded,
+  removed: tr.experience.technologyRemoved,
+};
 
 interface ProjectFormProps {
   experience: Experience;
@@ -173,11 +180,13 @@ export function ProjectForm({ experience, project }: ProjectFormProps) {
               hint={tr.form.counter(value.length, MAX_TECHNOLOGIES)}
             >
               {(field) => (
-                <TechnologiesField
+                <ChipListField
                   field={field}
                   value={value}
                   onChange={onChange}
                   known={technologies.data ?? []}
+                  max={MAX_TECHNOLOGIES}
+                  texts={technologyTexts}
                 />
               )}
             </FormField>

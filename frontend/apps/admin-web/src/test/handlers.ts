@@ -2,10 +2,15 @@ import { HttpResponse } from "msw/http";
 import { http } from "./server";
 
 // RFC 9457 error body, the way the backend sends it. Error responses aren't in the spec, so handlers wrap
-// this in response.untyped(...).
-export function problem(status: number, detail: string, type = "about:blank") {
+// this in response.untyped(...). extra holds extension members, e.g. the languages of a taken slug.
+export function problem(
+  status: number,
+  detail: string,
+  type = "about:blank",
+  extra: Record<string, unknown> = {},
+) {
   return HttpResponse.json(
-    { type, status, detail },
+    { type, status, detail, ...extra },
     { status, headers: { "Content-Type": "application/problem+json" } },
   );
 }

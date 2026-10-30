@@ -4,12 +4,13 @@ import { cn } from "cn";
 import { Button } from "@/components/ui/button";
 import { tr } from "@/i18n/tr";
 import { formatBytes } from "./mediaFiles";
-import { StatusBadge } from "./StatusBadge";
+import { StatusBadge } from "@/components/layout/StatusBadge";
 import type { UploadEntry } from "./useUploadQueue";
 
 interface UploadListProps {
   entries: UploadEntry[];
-  onEdit: (id: number) => void;
+  // Offers "add alt text" on finished rows; left out where that makes no sense (the cover picker)
+  onEdit?: ((id: number) => void) | undefined;
   onDismiss: (key: number) => void;
 }
 
@@ -67,7 +68,7 @@ export function UploadList({ entries, onEdit, onDismiss }: UploadListProps) {
               </span>
             </span>
             {badge(entry)}
-            {entry.status === "done" && entry.media?.id !== undefined && (
+            {onEdit && entry.status === "done" && entry.media?.id !== undefined && (
               <Button
                 variant="link"
                 size="sm"
