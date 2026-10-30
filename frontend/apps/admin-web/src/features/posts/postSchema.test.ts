@@ -23,6 +23,8 @@ const saved: Schemas["PostAdminResponse"] = {
   ],
   tags: ["Kafka"],
   version: 4,
+  createdAt: new Date(2026, 9, 14, 9, 0).toISOString(),
+  updatedAt: new Date(2026, 9, 14, 9, 12).toISOString(),
 };
 
 function issues(value: unknown) {

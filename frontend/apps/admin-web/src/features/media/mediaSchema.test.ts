@@ -8,7 +8,6 @@ describe("hasAltText", () => {
 
   it("shouldBeFalse_whenNoLanguageHasText", () => {
     expect(hasAltText({ translations: [] })).toBe(false);
-    expect(hasAltText({})).toBe(false);
   });
 });
 

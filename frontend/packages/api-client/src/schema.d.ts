@@ -456,30 +456,30 @@ export interface components {
         UsesItemAdminRequest: {
             /** @enum {string} */
             category: "HARDWARE" | "DEV_TOOLS" | "SOFTWARE" | "SERVICES";
-            url?: string;
+            url?: string | null;
             translations: components["schemas"]["UsesItemTranslationDto"][];
             /** Format: int64 */
-            version?: number;
+            version?: number | null;
         };
         UsesItemTranslationDto: {
             /** @enum {string} */
             lang: "tr" | "en";
             name: string;
-            description?: string;
+            description?: string | null;
         };
         UsesItemAdminResponse: {
             /** Format: int64 */
-            id?: number;
+            id: number;
             /** @enum {string} */
-            category?: "HARDWARE" | "DEV_TOOLS" | "SOFTWARE" | "SERVICES";
-            url?: string;
+            category: "HARDWARE" | "DEV_TOOLS" | "SOFTWARE" | "SERVICES";
+            url?: string | null;
             /** Format: int32 */
-            sortOrder?: number;
-            translations?: components["schemas"]["UsesItemTranslationDto"][];
+            sortOrder: number;
+            translations: components["schemas"]["UsesItemTranslationDto"][];
             /** Format: int64 */
-            version?: number;
+            version: number;
             /** Format: date-time */
-            updatedAt?: string;
+            updatedAt: string;
         };
         UsesOrderRequest: {
             ids: number[];
@@ -489,47 +489,47 @@ export interface components {
             translations: components["schemas"]["ProjectTranslationDto"][];
             technologies: string[];
             /** Format: int64 */
-            version?: number;
+            version?: number | null;
         };
         ProjectTranslationDto: {
             /** @enum {string} */
             lang: "tr" | "en";
             name: string;
-            client?: string;
-            description?: string;
-            highlightsMd?: string;
-            caseStudyMd?: string;
+            client?: string | null;
+            description?: string | null;
+            highlightsMd?: string | null;
+            caseStudyMd?: string | null;
         };
         ProjectAdminResponse: {
             /** Format: int64 */
-            id?: number;
+            id: number;
             /** Format: int64 */
-            experienceId?: number;
-            slug?: string;
+            experienceId: number;
+            slug: string;
             /** Format: int32 */
-            sortOrder?: number;
-            translations?: components["schemas"]["ProjectTranslationDto"][];
-            technologies?: string[];
+            sortOrder: number;
+            translations: components["schemas"]["ProjectTranslationDto"][];
+            technologies: string[];
             /** Format: int64 */
-            version?: number;
+            version: number;
             /** Format: date-time */
-            updatedAt?: string;
+            updatedAt: string;
         };
         ProfileAdminRequest: {
             fullName: string;
             /** Format: email */
-            email?: string;
-            location?: string;
+            email?: string | null;
+            location?: string | null;
             translations: components["schemas"]["ProfileTranslationDto"][];
             socialLinks: components["schemas"]["SocialLinkDto"][];
             /** Format: int64 */
-            version?: number;
+            version?: number | null;
         };
         ProfileTranslationDto: {
             /** @enum {string} */
             lang: "tr" | "en";
             headline: string;
-            intro?: string;
+            intro?: string | null;
         };
         SocialLinkDto: {
             /** @enum {string} */
@@ -537,69 +537,69 @@ export interface components {
             url: string;
         };
         ProfileAdminResponse: {
-            fullName?: string;
-            email?: string;
-            location?: string;
-            translations?: components["schemas"]["ProfileTranslationDto"][];
-            socialLinks?: components["schemas"]["SocialLinkDto"][];
+            fullName: string;
+            email?: string | null;
+            location?: string | null;
+            translations: components["schemas"]["ProfileTranslationDto"][];
+            socialLinks: components["schemas"]["SocialLinkDto"][];
             /** Format: int64 */
-            version?: number;
+            version: number;
             /** Format: date-time */
-            updatedAt?: string;
+            updatedAt: string;
         };
         PostAdminRequest: {
             /** @enum {string} */
             status: "DRAFT" | "PUBLISHED";
             /** Format: date-time */
-            publishedAt?: string;
+            publishedAt?: string | null;
             /** Format: int64 */
-            coverMediaId?: number;
+            coverMediaId?: number | null;
             translations: components["schemas"]["PostTranslationDto"][];
             tags: string[];
             /** Format: int64 */
-            version?: number;
+            version?: number | null;
         };
         PostTranslationDto: {
             /** @enum {string} */
             lang: "tr" | "en";
             slug: string;
             title: string;
-            summary?: string;
+            summary?: string | null;
             bodyMd: string;
         };
         PostAdminResponse: {
             /** Format: int64 */
-            id?: number;
+            id: number;
             /** @enum {string} */
-            status?: "DRAFT" | "PUBLISHED";
+            status: "DRAFT" | "PUBLISHED";
             /** Format: date-time */
-            publishedAt?: string;
-            scheduled?: boolean;
+            publishedAt?: string | null;
+            scheduled: boolean;
             /** Format: int64 */
-            coverMediaId?: number;
-            translations?: components["schemas"]["PostTranslationAdminResponse"][];
-            tags?: string[];
+            coverMediaId?: number | null;
+            translations: components["schemas"]["PostTranslationAdminResponse"][];
+            tags: string[];
             /** Format: int64 */
-            version?: number;
+            version: number;
             /** Format: date-time */
-            createdAt?: string;
+            createdAt: string;
             /** Format: date-time */
-            updatedAt?: string;
+            updatedAt: string;
         };
         PostTranslationAdminResponse: {
             /** @enum {string} */
-            lang?: "tr" | "en";
-            slug?: string;
-            title?: string;
-            summary?: string;
-            bodyMd?: string;
+            lang: "tr" | "en";
+            slug: string;
+            title: string;
+            summary?: string | null;
+            bodyMd: string;
             /** Format: int32 */
-            readingMinutes?: number;
+            readingMinutes: number;
         };
         PageAdminRequest: {
             translations: components["schemas"]["PageTranslationDto"][];
             /** Format: int64 */
-            version?: number;
+            version?: number | null;
         };
         PageTranslationDto: {
             /** @enum {string} */
@@ -609,17 +609,17 @@ export interface components {
         };
         PageAdminResponse: {
             /** @enum {string} */
-            key?: "ABOUT" | "NOW";
-            translations?: components["schemas"]["PageTranslationDto"][];
+            key: "ABOUT" | "NOW";
+            translations: components["schemas"]["PageTranslationDto"][];
             /** Format: int64 */
-            version?: number;
+            version: number;
             /** Format: date-time */
-            updatedAt?: string;
+            updatedAt: string;
         };
         MediaAdminRequest: {
             translations: components["schemas"]["MediaTranslationDto"][];
             /** Format: int64 */
-            version?: number;
+            version?: number | null;
         };
         MediaTranslationDto: {
             /** @enum {string} */
@@ -628,49 +628,49 @@ export interface components {
         };
         MediaAdminResponse: {
             /** Format: int64 */
-            id?: number;
-            url?: string;
+            id: number;
+            url: string;
             /** @enum {string} */
-            format?: "JPEG" | "PNG" | "WEBP" | "AVIF";
-            contentType?: string;
+            format: "JPEG" | "PNG" | "WEBP" | "AVIF";
+            contentType: string;
             /** Format: int64 */
-            sizeBytes?: number;
-            originalFilename?: string;
-            metadataStripped?: boolean;
-            translations?: components["schemas"]["MediaTranslationDto"][];
+            sizeBytes: number;
+            originalFilename?: string | null;
+            metadataStripped: boolean;
+            translations: components["schemas"]["MediaTranslationDto"][];
             /** Format: int64 */
-            version?: number;
+            version: number;
             /** Format: date-time */
-            createdAt?: string;
+            createdAt: string;
             /** Format: date-time */
-            updatedAt?: string;
+            updatedAt: string;
         };
         ExperienceAdminRequest: {
             company: string;
             startMonth: string;
-            endMonth?: string;
+            endMonth?: string | null;
             translations: components["schemas"]["ExperienceTranslationDto"][];
             /** Format: int64 */
-            version?: number;
+            version?: number | null;
         };
         ExperienceTranslationDto: {
             /** @enum {string} */
             lang: "tr" | "en";
             roleTitle: string;
-            summary?: string;
+            summary?: string | null;
         };
         ExperienceAdminResponse: {
             /** Format: int64 */
-            id?: number;
-            company?: string;
-            startMonth?: string;
-            endMonth?: string;
-            translations?: components["schemas"]["ExperienceTranslationDto"][];
-            projects?: components["schemas"]["ProjectAdminResponse"][];
+            id: number;
+            company: string;
+            startMonth: string;
+            endMonth?: string | null;
+            translations: components["schemas"]["ExperienceTranslationDto"][];
+            projects: components["schemas"]["ProjectAdminResponse"][];
             /** Format: int64 */
-            version?: number;
+            version: number;
             /** Format: date-time */
-            updatedAt?: string;
+            updatedAt: string;
         };
         ProjectOrderRequest: {
             ids: number[];
@@ -681,179 +681,179 @@ export interface components {
         };
         UsesCategoryResponse: {
             /** @enum {string} */
-            category?: "HARDWARE" | "DEV_TOOLS" | "SOFTWARE" | "SERVICES";
-            items?: components["schemas"]["UsesItemResponse"][];
+            category: "HARDWARE" | "DEV_TOOLS" | "SOFTWARE" | "SERVICES";
+            items: components["schemas"]["UsesItemResponse"][];
         };
         UsesItemResponse: {
-            name?: string;
-            description?: string;
-            url?: string;
+            name: string;
+            description?: string | null;
+            url?: string | null;
             /** @enum {string} */
-            lang?: "tr" | "en";
+            lang: "tr" | "en";
         };
         TagCountResponse: {
-            name?: string;
-            slug?: string;
+            name: string;
+            slug: string;
             /** Format: int64 */
-            postCount?: number;
+            postCount: number;
         };
         ProfileResponse: {
-            fullName?: string;
-            headline?: string;
-            intro?: string;
-            location?: string;
-            email?: string;
+            fullName: string;
+            headline: string;
+            intro?: string | null;
+            location?: string | null;
+            email?: string | null;
             /** @enum {string} */
-            lang?: "tr" | "en";
-            socialLinks?: components["schemas"]["SocialLinkDto"][];
+            lang: "tr" | "en";
+            socialLinks: components["schemas"]["SocialLinkDto"][];
         };
         CoverResponse: {
-            url?: string;
-            alt?: string;
+            url: string;
+            alt: string;
         };
         PageResponsePostSummaryResponse: {
-            items?: components["schemas"]["PostSummaryResponse"][];
+            items: components["schemas"]["PostSummaryResponse"][];
             /** Format: int32 */
-            page?: number;
+            page: number;
             /** Format: int32 */
-            size?: number;
+            size: number;
             /** Format: int64 */
-            totalItems?: number;
+            totalItems: number;
             /** Format: int32 */
-            totalPages?: number;
+            totalPages: number;
         };
         PostSummaryResponse: {
-            slug?: string;
-            title?: string;
-            summary?: string;
+            slug: string;
+            title: string;
+            summary?: string | null;
             /** Format: date-time */
-            publishedAt?: string;
+            publishedAt: string;
             /** Format: int32 */
-            readingMinutes?: number;
-            tags?: components["schemas"]["TagResponse"][];
-            cover?: components["schemas"]["CoverResponse"];
+            readingMinutes: number;
+            tags: components["schemas"]["TagResponse"][];
+            cover?: components["schemas"]["CoverResponse"] | null;
             /** @enum {string} */
-            lang?: "tr" | "en";
+            lang: "tr" | "en";
         };
         TagResponse: {
-            name?: string;
-            slug?: string;
+            name: string;
+            slug: string;
         };
         PostDetailResponse: {
-            slug?: string;
+            slug: string;
             /** @enum {string} */
-            lang?: "tr" | "en";
-            title?: string;
-            summary?: string;
-            bodyMd?: string;
+            lang: "tr" | "en";
+            title: string;
+            summary?: string | null;
+            bodyMd: string;
             /** Format: date-time */
-            publishedAt?: string;
+            publishedAt: string;
             /** Format: date-time */
-            updatedAt?: string;
+            updatedAt: string;
             /** Format: int32 */
-            readingMinutes?: number;
-            tags?: components["schemas"]["TagResponse"][];
-            cover?: components["schemas"]["CoverResponse"];
-            availableTranslations?: components["schemas"]["TranslationLink"][];
-            previous?: components["schemas"]["PostLink"];
-            next?: components["schemas"]["PostLink"];
+            readingMinutes: number;
+            tags: components["schemas"]["TagResponse"][];
+            cover?: components["schemas"]["CoverResponse"] | null;
+            availableTranslations: components["schemas"]["TranslationLink"][];
+            previous?: components["schemas"]["PostLink"] | null;
+            next?: components["schemas"]["PostLink"] | null;
         };
         PostLink: {
-            slug?: string;
-            title?: string;
+            slug: string;
+            title: string;
         };
         TranslationLink: {
             /** @enum {string} */
-            lang?: "tr" | "en";
-            slug?: string;
+            lang: "tr" | "en";
+            slug: string;
         };
         PageResponse: {
             /** @enum {string} */
-            key?: "ABOUT" | "NOW";
+            key: "ABOUT" | "NOW";
             /** @enum {string} */
-            lang?: "tr" | "en";
-            availableLanguages?: ("tr" | "en")[];
-            title?: string;
-            bodyMd?: string;
+            lang: "tr" | "en";
+            availableLanguages: ("tr" | "en")[];
+            title: string;
+            bodyMd: string;
             /** Format: date-time */
-            updatedAt?: string;
+            updatedAt: string;
         };
         ExperienceResponse: {
-            company?: string;
-            startMonth?: string;
-            endMonth?: string;
-            current?: boolean;
-            roleTitle?: string;
-            summary?: string;
+            company: string;
+            startMonth: string;
+            endMonth?: string | null;
+            current: boolean;
+            roleTitle: string;
+            summary?: string | null;
             /** @enum {string} */
-            lang?: "tr" | "en";
-            projects?: components["schemas"]["ProjectSummaryResponse"][];
+            lang: "tr" | "en";
+            projects: components["schemas"]["ProjectSummaryResponse"][];
         };
         ProjectSummaryResponse: {
-            slug?: string;
-            name?: string;
-            client?: string;
-            description?: string;
-            highlightsMd?: string;
-            technologies?: string[];
-            hasCaseStudy?: boolean;
+            slug: string;
+            name: string;
+            client?: string | null;
+            description?: string | null;
+            highlightsMd?: string | null;
+            technologies: string[];
+            hasCaseStudy: boolean;
             /** @enum {string} */
-            lang?: "tr" | "en";
+            lang: "tr" | "en";
         };
         CaseStudyResponse: {
-            slug?: string;
-            company?: string;
-            startMonth?: string;
-            endMonth?: string;
-            name?: string;
-            client?: string;
-            description?: string;
-            highlightsMd?: string;
-            caseStudyMd?: string;
-            technologies?: string[];
+            slug: string;
+            company: string;
+            startMonth: string;
+            endMonth?: string | null;
+            name: string;
+            client?: string | null;
+            description?: string | null;
+            highlightsMd?: string | null;
+            caseStudyMd: string;
+            technologies: string[];
             /** @enum {string} */
-            lang?: "tr" | "en";
-            availableLanguages?: ("tr" | "en")[];
+            lang: "tr" | "en";
+            availableLanguages: ("tr" | "en")[];
         };
         TechnologyResponse: {
             /** Format: int64 */
-            id?: number;
-            name?: string;
+            id: number;
+            name: string;
         };
         PageResponsePostAdminSummary: {
-            items?: components["schemas"]["PostAdminSummary"][];
+            items: components["schemas"]["PostAdminSummary"][];
             /** Format: int32 */
-            page?: number;
+            page: number;
             /** Format: int32 */
-            size?: number;
+            size: number;
             /** Format: int64 */
-            totalItems?: number;
+            totalItems: number;
             /** Format: int32 */
-            totalPages?: number;
+            totalPages: number;
         };
         PostAdminSummary: {
             /** Format: int64 */
-            id?: number;
+            id: number;
             /** @enum {string} */
-            status?: "DRAFT" | "PUBLISHED";
+            status: "DRAFT" | "PUBLISHED";
             /** Format: date-time */
-            publishedAt?: string;
-            scheduled?: boolean;
-            translations?: components["schemas"]["TranslationTitle"][];
-            tags?: string[];
+            publishedAt?: string | null;
+            scheduled: boolean;
+            translations: components["schemas"]["TranslationTitle"][];
+            tags: string[];
             /** Format: int64 */
-            version?: number;
+            version: number;
             /** Format: date-time */
-            updatedAt?: string;
+            updatedAt: string;
         };
         TranslationTitle: {
             /** @enum {string} */
-            lang?: "tr" | "en";
-            slug?: string;
-            title?: string;
+            lang: "tr" | "en";
+            slug: string;
+            title: string;
         };
         MeResponse: {
-            username?: string;
+            username: string;
         };
     };
     responses: never;

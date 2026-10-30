@@ -67,9 +67,6 @@ export function ProjectForm({ experience, project }: ProjectFormProps) {
 
   const submit = form.handleSubmit(
     (values) => {
-      if (experience.id === undefined) {
-        return;
-      }
       save.mutate(
         {
           experienceId: experience.id,
@@ -108,7 +105,7 @@ export function ProjectForm({ experience, project }: ProjectFormProps) {
   const reload = () => {
     void refetch().then(({ data }) => {
       const fresh = data
-        ?.flatMap((item) => item.projects ?? [])
+        ?.flatMap((item) => item.projects)
         .find((candidate) => candidate.id === project?.id);
       if (fresh) {
         form.reset(fromProject(fresh));

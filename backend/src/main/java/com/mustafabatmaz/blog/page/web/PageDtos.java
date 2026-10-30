@@ -9,6 +9,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.Instant;
 import java.util.List;
+import org.jspecify.annotations.Nullable;
 
 /** Request and response bodies of the page API. */
 public final class PageDtos {
@@ -27,7 +28,9 @@ public final class PageDtos {
             String bodyMd,
             Instant updatedAt) {}
 
-    public record PageAdminRequest(@NotEmpty @Valid List<PageTranslationDto> translations, Long version) {}
+    public record PageAdminRequest(
+            @NotEmpty @Valid List<PageTranslationDto> translations,
+            @Nullable Long version) {}
 
     public record PageAdminResponse(
             PageKey key, List<PageTranslationDto> translations, long version, Instant updatedAt) {}

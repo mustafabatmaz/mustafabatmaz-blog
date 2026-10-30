@@ -36,12 +36,12 @@ export function postState(post: {
 export function publishedAtFor(
   mode: PublishMode,
   publishAt: string,
-  saved: { publishedAt?: string } | null,
+  saved: { publishedAt?: string | null } | null,
   now: Date,
 ): string | undefined {
   switch (mode) {
     case "draft":
-      return saved?.publishedAt;
+      return saved?.publishedAt ?? undefined;
     case "published":
       return saved?.publishedAt && new Date(saved.publishedAt) <= now
         ? saved.publishedAt

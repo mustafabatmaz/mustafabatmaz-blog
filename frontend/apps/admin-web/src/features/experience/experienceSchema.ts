@@ -82,5 +82,5 @@ export function projectName(project: Project) {
 }
 
 export function hasCaseStudy(project: Project) {
-  return (project.translations ?? []).some((t) => t.caseStudyMd?.trim());
+  return project.translations.some((t) => t.caseStudyMd?.trim());
 }

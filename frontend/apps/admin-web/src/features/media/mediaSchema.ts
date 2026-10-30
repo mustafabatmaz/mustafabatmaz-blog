@@ -20,7 +20,7 @@ export type MediaFormValues = z.input<typeof mediaSchema>;
 
 // The public site falls back to the other language, so one language is enough
 export function hasAltText(media: Pick<MediaItem, "translations">) {
-  return media.translations?.some((t) => t.altText.trim() !== "") ?? false;
+  return media.translations.some((t) => t.altText.trim() !== "");
 }
 
 export function mediaName(media: MediaItem) {
@@ -29,7 +29,7 @@ export function mediaName(media: MediaItem) {
 
 // "TR EN": the languages that have alt text
 export function altLanguages(media: Pick<MediaItem, "translations">) {
-  return (media.translations ?? [])
+  return media.translations
     .filter((t) => t.altText.trim() !== "")
     .map((t) => t.lang.toUpperCase())
     .join(" ");

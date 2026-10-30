@@ -66,9 +66,7 @@ export function CoverPicker({ current, onPick, onClose }: CoverPickerProps) {
                     actionName={tr.posts.chooseLabel}
                     current={item.id === current ? tr.posts.currentCover : undefined}
                     onAction={() => {
-                      if (item.id !== undefined) {
-                        onPick(item.id);
-                      }
+                      onPick(item.id);
                     }}
                   />
                 </li>

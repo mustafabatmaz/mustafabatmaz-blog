@@ -11,6 +11,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.time.Instant;
 import java.util.List;
+import org.jspecify.annotations.Nullable;
 
 /** Request and response bodies of the profile API. */
 public final class ProfileDtos {
@@ -23,24 +24,24 @@ public final class ProfileDtos {
     public record ProfileResponse(
             String fullName,
             String headline,
-            String intro,
-            String location,
-            String email,
+            @Nullable String intro,
+            @Nullable String location,
+            @Nullable String email,
             Language lang,
             List<SocialLinkDto> socialLinks) {}
 
     public record ProfileAdminRequest(
             @NotBlank @Size(max = 100) String fullName,
-            @Email @Size(max = 254) String email,
-            @Size(max = 100) String location,
+            @Email @Size(max = 254) @Nullable String email,
+            @Size(max = 100) @Nullable String location,
             @NotEmpty @Valid List<ProfileTranslationDto> translations,
             @NotNull @Size(max = 20) @Valid List<SocialLinkDto> socialLinks,
-            Long version) {}
+            @Nullable Long version) {}
 
     public record ProfileAdminResponse(
             String fullName,
-            String email,
-            String location,
+            @Nullable String email,
+            @Nullable String location,
             List<ProfileTranslationDto> translations,
             List<SocialLinkDto> socialLinks,
             long version,
@@ -49,7 +50,7 @@ public final class ProfileDtos {
     public record ProfileTranslationDto(
             @NotNull Language lang,
             @NotBlank @Size(max = 150) String headline,
-            @Size(max = 2000) String intro) {}
+            @Size(max = 2000) @Nullable String intro) {}
 
     public record SocialLinkDto(
             @NotNull SocialPlatform platform,

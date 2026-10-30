@@ -6,6 +6,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
@@ -30,12 +32,7 @@ class OpenApiSpecTests extends IntegrationTest {
 
     @Test
     void shouldMatchFrontendSnapshot_whenSpecIsGenerated() throws Exception {
-        byte[] body = mockMvc.perform(get("/v3/api-docs"))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsByteArray();
-        ObjectNode actual = (ObjectNode) jsonMapper.readTree(body);
+        ObjectNode actual = liveSpec();
         // The server URL depends on the host that served the spec, so the snapshot leaves it out
         actual.remove("servers");
         JsonNode expected = jsonMapper.readTree(Files.readString(SNAPSHOT));
@@ -52,5 +49,67 @@ class OpenApiSpecTests extends IntegrationTest {
                                 + " API_DOCS_ENABLED=true and run `pnpm gen:api` in frontend/.",
                         SNAPSHOT, ACTUAL)
                 .isTrue();
+    }
+
+    @Test
+    void shouldRequireResponseFields_whenTheyAreNeverNull() throws Exception {
+        JsonNode profile = schema("ProfileResponse");
+
+        assertThat(required(profile))
+                .contains("fullName", "headline", "lang", "socialLinks")
+                .doesNotContain("intro", "location", "email");
+    }
+
+    @Test
+    void shouldMarkNullableFields_asOptionalAndNullable() throws Exception {
+        JsonNode post = schema("PostDetailResponse");
+
+        assertThat(required(post))
+                .contains("slug", "title", "bodyMd", "publishedAt", "readingMinutes", "tags", "availableTranslations")
+                .doesNotContain("summary", "cover", "previous", "next");
+        assertThat(post.at("/properties/summary/type").toString()).contains("\"null\"");
+        // A reference can't carry a second type, so a nullable one becomes "the reference or null"
+        assertThat(post.at("/properties/cover/oneOf").toString())
+                .contains("#/components/schemas/CoverResponse")
+                .contains("\"null\"");
+    }
+
+    @Test
+    void shouldRequireEveryPageField_whenTheListIsGeneric() throws Exception {
+        JsonNode page = schema("PageResponsePostSummaryResponse");
+
+        assertThat(required(page)).containsExactlyInAnyOrder("items", "page", "size", "totalItems", "totalPages");
+    }
+
+    @Test
+    void shouldKeepOptionalRequestFields_optional() throws Exception {
+        JsonNode request = schema("ProfileAdminRequest");
+
+        assertThat(required(request))
+                .contains("fullName", "translations", "socialLinks")
+                .doesNotContain("email", "location", "version");
+    }
+
+    private ObjectNode liveSpec() throws Exception {
+        byte[] body = mockMvc.perform(get("/v3/api-docs"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsByteArray();
+        return (ObjectNode) jsonMapper.readTree(body);
+    }
+
+    private JsonNode schema(String name) throws Exception {
+        JsonNode schema = liveSpec().at("/components/schemas/" + name);
+        assertThat(schema.isMissingNode())
+                .withFailMessage("No schema %s in the spec", name)
+                .isFalse();
+        return schema;
+    }
+
+    private static List<String> required(JsonNode schema) {
+        List<String> names = new ArrayList<>();
+        schema.path("required").forEach(name -> names.add(name.asString()));
+        return names;
     }
 }

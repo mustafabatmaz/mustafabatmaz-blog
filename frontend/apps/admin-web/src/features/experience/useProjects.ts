@@ -40,7 +40,7 @@ export function useSaveProject() {
           if (item.id !== experienceId) {
             return item;
           }
-          const projects = item.projects ?? [];
+          const projects = item.projects;
           return {
             ...item,
             projects: projects.some((p) => p.id === saved.id)
