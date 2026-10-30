@@ -62,3 +62,5 @@ jobs:
       - run: pnpm -r lint
       - run: pnpm -r typecheck
       - run: pnpm -r test
+      # Catches what only the production build sees (bundling, the type check tsc -b runs before it)
+      - run: pnpm -r build

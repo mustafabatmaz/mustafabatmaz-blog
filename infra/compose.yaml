@@ -37,7 +37,9 @@ services:
     volumes:
       - media:/var/lib/blog/media
     ports:
-      - "8080:8080"
+      # Local tools only (Swagger, curl). Tomcat trusts X-Forwarded-For from private addresses, and a request
+      # from another machine would arrive through Docker's private gateway; admin-web is the way in.
+      - "127.0.0.1:8080:8080"
     depends_on:
       postgres:
         condition: service_healthy
@@ -47,6 +49,25 @@ services:
       timeout: 5s
       retries: 12
       start_period: 30s
+
+  admin-web:
+    build:
+      context: ../frontend
+      dockerfile: apps/admin-web/Dockerfile
+      # The nginx config lives here in infra/
+      additional_contexts:
+        infra: .
+    ports:
+      - "127.0.0.1:8081:8080"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      # nginx listens on IPv4 only; "localhost" could resolve to ::1
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:8080/"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
 volumes:
   pgdata:
