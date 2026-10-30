@@ -24,7 +24,7 @@ export function toYearMonth({ month, year }: MonthYear) {
   return month && year ? `${year}-${month}` : undefined;
 }
 
-export function fromYearMonth(value: string | undefined): MonthYear {
+export function fromYearMonth(value: string | null | undefined): MonthYear {
   const [year = "", month = ""] = value?.split("-") ?? [];
   return { month, year };
 }
@@ -35,7 +35,7 @@ function formatMonth(value: string) {
 }
 
 // "Haz 2025 — Halen"
-export function formatRange(start: string | undefined, end: string | undefined) {
+export function formatRange(start: string, end: string | null | undefined) {
   const from = start ? formatMonth(start) : "";
   return `${from} — ${end ? formatMonth(end) : tr.experience.current}`;
 }

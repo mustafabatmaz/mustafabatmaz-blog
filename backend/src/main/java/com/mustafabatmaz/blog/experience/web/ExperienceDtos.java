@@ -10,6 +10,7 @@ import jakarta.validation.constraints.Size;
 import java.time.Instant;
 import java.time.YearMonth;
 import java.util.List;
+import org.jspecify.annotations.Nullable;
 
 /** Request and response bodies of the experience API. Months are written as "2025-06". */
 public final class ExperienceDtos {
@@ -24,19 +25,19 @@ public final class ExperienceDtos {
     public record ExperienceResponse(
             String company,
             YearMonth startMonth,
-            YearMonth endMonth,
+            @Nullable YearMonth endMonth,
             boolean current,
             String roleTitle,
-            String summary,
+            @Nullable String summary,
             Language lang,
             List<ProjectSummaryResponse> projects) {}
 
     public record ProjectSummaryResponse(
             String slug,
             String name,
-            String client,
-            String description,
-            String highlightsMd,
+            @Nullable String client,
+            @Nullable String description,
+            @Nullable String highlightsMd,
             List<String> technologies,
             boolean hasCaseStudy,
             Language lang) {}
@@ -45,11 +46,11 @@ public final class ExperienceDtos {
             String slug,
             String company,
             YearMonth startMonth,
-            YearMonth endMonth,
+            @Nullable YearMonth endMonth,
             String name,
-            String client,
-            String description,
-            String highlightsMd,
+            @Nullable String client,
+            @Nullable String description,
+            @Nullable String highlightsMd,
             String caseStudyMd,
             List<String> technologies,
             Language lang,
@@ -60,15 +61,15 @@ public final class ExperienceDtos {
     public record ExperienceAdminRequest(
             @NotBlank @Size(max = 100) String company,
             @NotNull YearMonth startMonth,
-            YearMonth endMonth,
+            @Nullable YearMonth endMonth,
             @NotEmpty @Valid List<ExperienceTranslationDto> translations,
-            Long version) {}
+            @Nullable Long version) {}
 
     public record ExperienceAdminResponse(
             Long id,
             String company,
             YearMonth startMonth,
-            YearMonth endMonth,
+            @Nullable YearMonth endMonth,
             List<ExperienceTranslationDto> translations,
             List<ProjectAdminResponse> projects,
             long version,
@@ -77,7 +78,7 @@ public final class ExperienceDtos {
     public record ExperienceTranslationDto(
             @NotNull Language lang,
             @NotBlank @Size(max = 150) String roleTitle,
-            @Size(max = 2000) String summary) {}
+            @Size(max = 2000) @Nullable String summary) {}
 
     // ---- admin: project ----
 
@@ -87,7 +88,7 @@ public final class ExperienceDtos {
 
             @NotEmpty @Valid List<ProjectTranslationDto> translations,
             @NotNull @Size(max = 30) List<@NotBlank @Size(max = 50) String> technologies,
-            Long version) {}
+            @Nullable Long version) {}
 
     public record ProjectAdminResponse(
             Long id,
@@ -102,10 +103,10 @@ public final class ExperienceDtos {
     public record ProjectTranslationDto(
             @NotNull Language lang,
             @NotBlank @Size(max = 150) String name,
-            @Size(max = 150) String client,
-            @Size(max = 2000) String description,
-            @Size(max = 10_000) String highlightsMd,
-            @Size(max = 100_000) String caseStudyMd) {}
+            @Size(max = 150) @Nullable String client,
+            @Size(max = 2000) @Nullable String description,
+            @Size(max = 10_000) @Nullable String highlightsMd,
+            @Size(max = 100_000) @Nullable String caseStudyMd) {}
 
     /** The complete new order of one company's projects: every project id exactly once. */
     public record ProjectOrderRequest(@NotEmpty List<Long> ids) {}

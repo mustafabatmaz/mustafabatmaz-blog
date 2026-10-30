@@ -54,9 +54,7 @@ export function useSavePost() {
         ? unwrap(api.POST("/api/admin/posts", { body }))
         : unwrap(api.PUT("/api/admin/posts/{id}", { params: { path: { id } }, body })),
     onSuccess: (saved) => {
-      if (saved.id !== undefined) {
-        queryClient.setQueryData(postKey(saved.id), saved);
-      }
+      queryClient.setQueryData(postKey(saved.id), saved);
       // Lists are paged and sorted by last edit, so only the server knows where the post lands now
       void queryClient.invalidateQueries({ queryKey: listsKey });
       // A save can create tags the backend didn't know yet

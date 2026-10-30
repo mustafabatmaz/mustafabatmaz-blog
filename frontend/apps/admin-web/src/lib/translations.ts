@@ -21,10 +21,10 @@ export function toTranslations<T extends TextFields>(byLanguage: ByLanguage<T>) 
   });
 }
 
-// API → form. Missing languages and fields become empty strings so every input is controlled.
+// API → form. Missing languages and fields (absent or null) become empty strings so every input is controlled.
 export function fromTranslations<T extends TextFields>(
   translations:
-    readonly ({ lang?: Language } & { [K in keyof T]?: string | undefined })[] | undefined,
+    readonly ({ lang?: Language } & { [K in keyof T]?: string | null | undefined })[] | undefined,
   empty: T,
 ): ByLanguage<T> {
   const result = { tr: { ...empty }, en: { ...empty } };

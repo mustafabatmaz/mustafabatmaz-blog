@@ -1326,7 +1326,10 @@
             ]
           },
           "url": {
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "maxLength": 500,
             "minLength": 0,
             "pattern": "^https?://\\S+$"
@@ -1339,7 +1342,10 @@
             "minItems": 1
           },
           "version": {
-            "type": "integer",
+            "type": [
+              "integer",
+              "null"
+            ],
             "format": "int64"
           }
         },
@@ -1364,7 +1370,10 @@
             "minLength": 0
           },
           "description": {
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "maxLength": 500,
             "minLength": 0
           }
@@ -1391,7 +1400,10 @@
             ]
           },
           "url": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "sortOrder": {
             "type": "integer",
@@ -1411,7 +1423,15 @@
             "type": "string",
             "format": "date-time"
           }
-        }
+        },
+        "required": [
+          "category",
+          "id",
+          "sortOrder",
+          "translations",
+          "updatedAt",
+          "version"
+        ]
       },
       "UsesOrderRequest": {
         "type": "object",
@@ -1456,7 +1476,10 @@
             "minItems": 0
           },
           "version": {
-            "type": "integer",
+            "type": [
+              "integer",
+              "null"
+            ],
             "format": "int64"
           }
         },
@@ -1482,22 +1505,34 @@
             "minLength": 0
           },
           "client": {
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "maxLength": 150,
             "minLength": 0
           },
           "description": {
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "maxLength": 2000,
             "minLength": 0
           },
           "highlightsMd": {
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "maxLength": 10000,
             "minLength": 0
           },
           "caseStudyMd": {
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "maxLength": 100000,
             "minLength": 0
           }
@@ -1545,7 +1580,17 @@
             "type": "string",
             "format": "date-time"
           }
-        }
+        },
+        "required": [
+          "experienceId",
+          "id",
+          "slug",
+          "sortOrder",
+          "technologies",
+          "translations",
+          "updatedAt",
+          "version"
+        ]
       },
       "ProfileAdminRequest": {
         "type": "object",
@@ -1556,13 +1601,19 @@
             "minLength": 0
           },
           "email": {
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "format": "email",
             "maxLength": 254,
             "minLength": 0
           },
           "location": {
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "maxLength": 100,
             "minLength": 0
           },
@@ -1582,7 +1633,10 @@
             "minItems": 0
           },
           "version": {
-            "type": "integer",
+            "type": [
+              "integer",
+              "null"
+            ],
             "format": "int64"
           }
         },
@@ -1608,7 +1662,10 @@
             "minLength": 0
           },
           "intro": {
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "maxLength": 2000,
             "minLength": 0
           }
@@ -1650,10 +1707,16 @@
             "type": "string"
           },
           "email": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "location": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "translations": {
             "type": "array",
@@ -1675,7 +1738,14 @@
             "type": "string",
             "format": "date-time"
           }
-        }
+        },
+        "required": [
+          "fullName",
+          "socialLinks",
+          "translations",
+          "updatedAt",
+          "version"
+        ]
       },
       "PostAdminRequest": {
         "type": "object",
@@ -1688,11 +1758,17 @@
             ]
           },
           "publishedAt": {
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "format": "date-time"
           },
           "coverMediaId": {
-            "type": "integer",
+            "type": [
+              "integer",
+              "null"
+            ],
             "format": "int64"
           },
           "translations": {
@@ -1713,7 +1789,10 @@
             "minItems": 0
           },
           "version": {
-            "type": "integer",
+            "type": [
+              "integer",
+              "null"
+            ],
             "format": "int64"
           }
         },
@@ -1745,7 +1824,10 @@
             "minLength": 0
           },
           "summary": {
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "maxLength": 500,
             "minLength": 0
           },
@@ -1777,14 +1859,20 @@
             ]
           },
           "publishedAt": {
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "format": "date-time"
           },
           "scheduled": {
             "type": "boolean"
           },
           "coverMediaId": {
-            "type": "integer",
+            "type": [
+              "integer",
+              "null"
+            ],
             "format": "int64"
           },
           "translations": {
@@ -1811,7 +1899,17 @@
             "type": "string",
             "format": "date-time"
           }
-        }
+        },
+        "required": [
+          "createdAt",
+          "id",
+          "scheduled",
+          "status",
+          "tags",
+          "translations",
+          "updatedAt",
+          "version"
+        ]
       },
       "PostTranslationAdminResponse": {
         "type": "object",
@@ -1830,7 +1928,10 @@
             "type": "string"
           },
           "summary": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "bodyMd": {
             "type": "string"
@@ -1839,7 +1940,14 @@
             "type": "integer",
             "format": "int32"
           }
-        }
+        },
+        "required": [
+          "bodyMd",
+          "lang",
+          "readingMinutes",
+          "slug",
+          "title"
+        ]
       },
       "PageAdminRequest": {
         "type": "object",
@@ -1852,7 +1960,10 @@
             "minItems": 1
           },
           "version": {
-            "type": "integer",
+            "type": [
+              "integer",
+              "null"
+            ],
             "format": "int64"
           }
         },
@@ -1911,7 +2022,13 @@
             "type": "string",
             "format": "date-time"
           }
-        }
+        },
+        "required": [
+          "key",
+          "translations",
+          "updatedAt",
+          "version"
+        ]
       },
       "MediaAdminRequest": {
         "type": "object",
@@ -1923,7 +2040,10 @@
             }
           },
           "version": {
-            "type": "integer",
+            "type": [
+              "integer",
+              "null"
+            ],
             "format": "int64"
           }
         },
@@ -1979,7 +2099,10 @@
             "format": "int64"
           },
           "originalFilename": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "metadataStripped": {
             "type": "boolean"
@@ -2002,7 +2125,19 @@
             "type": "string",
             "format": "date-time"
           }
-        }
+        },
+        "required": [
+          "contentType",
+          "createdAt",
+          "format",
+          "id",
+          "metadataStripped",
+          "sizeBytes",
+          "translations",
+          "updatedAt",
+          "url",
+          "version"
+        ]
       },
       "ExperienceAdminRequest": {
         "type": "object",
@@ -2016,7 +2151,10 @@
             "type": "string"
           },
           "endMonth": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "translations": {
             "type": "array",
@@ -2026,7 +2164,10 @@
             "minItems": 1
           },
           "version": {
-            "type": "integer",
+            "type": [
+              "integer",
+              "null"
+            ],
             "format": "int64"
           }
         },
@@ -2052,7 +2193,10 @@
             "minLength": 0
           },
           "summary": {
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "maxLength": 2000,
             "minLength": 0
           }
@@ -2076,7 +2220,10 @@
             "type": "string"
           },
           "endMonth": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "translations": {
             "type": "array",
@@ -2098,7 +2245,16 @@
             "type": "string",
             "format": "date-time"
           }
-        }
+        },
+        "required": [
+          "company",
+          "id",
+          "projects",
+          "startMonth",
+          "translations",
+          "updatedAt",
+          "version"
+        ]
       },
       "ProjectOrderRequest": {
         "type": "object",
@@ -2153,7 +2309,11 @@
               "$ref": "#/components/schemas/UsesItemResponse"
             }
           }
-        }
+        },
+        "required": [
+          "category",
+          "items"
+        ]
       },
       "UsesItemResponse": {
         "type": "object",
@@ -2162,10 +2322,16 @@
             "type": "string"
           },
           "description": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "url": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "lang": {
             "type": "string",
@@ -2174,7 +2340,11 @@
               "en"
             ]
           }
-        }
+        },
+        "required": [
+          "lang",
+          "name"
+        ]
       },
       "TagCountResponse": {
         "type": "object",
@@ -2189,7 +2359,12 @@
             "type": "integer",
             "format": "int64"
           }
-        }
+        },
+        "required": [
+          "name",
+          "postCount",
+          "slug"
+        ]
       },
       "ProfileResponse": {
         "type": "object",
@@ -2201,13 +2376,22 @@
             "type": "string"
           },
           "intro": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "location": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "email": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "lang": {
             "type": "string",
@@ -2222,7 +2406,13 @@
               "$ref": "#/components/schemas/SocialLinkDto"
             }
           }
-        }
+        },
+        "required": [
+          "fullName",
+          "headline",
+          "lang",
+          "socialLinks"
+        ]
       },
       "CoverResponse": {
         "type": "object",
@@ -2233,7 +2423,11 @@
           "alt": {
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "alt",
+          "url"
+        ]
       },
       "PageResponsePostSummaryResponse": {
         "type": "object",
@@ -2260,7 +2454,14 @@
             "type": "integer",
             "format": "int32"
           }
-        }
+        },
+        "required": [
+          "items",
+          "page",
+          "size",
+          "totalItems",
+          "totalPages"
+        ]
       },
       "PostSummaryResponse": {
         "type": "object",
@@ -2272,7 +2473,10 @@
             "type": "string"
           },
           "summary": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "publishedAt": {
             "type": "string",
@@ -2289,7 +2493,14 @@
             }
           },
           "cover": {
-            "$ref": "#/components/schemas/CoverResponse"
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CoverResponse"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "lang": {
             "type": "string",
@@ -2298,7 +2509,15 @@
               "en"
             ]
           }
-        }
+        },
+        "required": [
+          "lang",
+          "publishedAt",
+          "readingMinutes",
+          "slug",
+          "tags",
+          "title"
+        ]
       },
       "TagResponse": {
         "type": "object",
@@ -2309,7 +2528,11 @@
           "slug": {
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "name",
+          "slug"
+        ]
       },
       "PostDetailResponse": {
         "type": "object",
@@ -2328,7 +2551,10 @@
             "type": "string"
           },
           "summary": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "bodyMd": {
             "type": "string"
@@ -2352,7 +2578,14 @@
             }
           },
           "cover": {
-            "$ref": "#/components/schemas/CoverResponse"
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CoverResponse"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "availableTranslations": {
             "type": "array",
@@ -2361,12 +2594,37 @@
             }
           },
           "previous": {
-            "$ref": "#/components/schemas/PostLink"
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PostLink"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "next": {
-            "$ref": "#/components/schemas/PostLink"
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PostLink"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
-        }
+        },
+        "required": [
+          "availableTranslations",
+          "bodyMd",
+          "lang",
+          "publishedAt",
+          "readingMinutes",
+          "slug",
+          "tags",
+          "title",
+          "updatedAt"
+        ]
       },
       "PostLink": {
         "type": "object",
@@ -2377,7 +2635,11 @@
           "title": {
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "slug",
+          "title"
+        ]
       },
       "TranslationLink": {
         "type": "object",
@@ -2392,7 +2654,11 @@
           "slug": {
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "lang",
+          "slug"
+        ]
       },
       "PageResponse": {
         "type": "object",
@@ -2431,7 +2697,15 @@
             "type": "string",
             "format": "date-time"
           }
-        }
+        },
+        "required": [
+          "availableLanguages",
+          "bodyMd",
+          "key",
+          "lang",
+          "title",
+          "updatedAt"
+        ]
       },
       "ExperienceResponse": {
         "type": "object",
@@ -2443,7 +2717,10 @@
             "type": "string"
           },
           "endMonth": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "current": {
             "type": "boolean"
@@ -2452,7 +2729,10 @@
             "type": "string"
           },
           "summary": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "lang": {
             "type": "string",
@@ -2467,7 +2747,15 @@
               "$ref": "#/components/schemas/ProjectSummaryResponse"
             }
           }
-        }
+        },
+        "required": [
+          "company",
+          "current",
+          "lang",
+          "projects",
+          "roleTitle",
+          "startMonth"
+        ]
       },
       "ProjectSummaryResponse": {
         "type": "object",
@@ -2479,13 +2767,22 @@
             "type": "string"
           },
           "client": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "description": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "highlightsMd": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "technologies": {
             "type": "array",
@@ -2503,7 +2800,14 @@
               "en"
             ]
           }
-        }
+        },
+        "required": [
+          "hasCaseStudy",
+          "lang",
+          "name",
+          "slug",
+          "technologies"
+        ]
       },
       "CaseStudyResponse": {
         "type": "object",
@@ -2518,19 +2822,31 @@
             "type": "string"
           },
           "endMonth": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "name": {
             "type": "string"
           },
           "client": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "description": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "highlightsMd": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "caseStudyMd": {
             "type": "string"
@@ -2558,7 +2874,17 @@
               ]
             }
           }
-        }
+        },
+        "required": [
+          "availableLanguages",
+          "caseStudyMd",
+          "company",
+          "lang",
+          "name",
+          "slug",
+          "startMonth",
+          "technologies"
+        ]
       },
       "TechnologyResponse": {
         "type": "object",
@@ -2570,7 +2896,11 @@
           "name": {
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
       },
       "PageResponsePostAdminSummary": {
         "type": "object",
@@ -2597,7 +2927,14 @@
             "type": "integer",
             "format": "int32"
           }
-        }
+        },
+        "required": [
+          "items",
+          "page",
+          "size",
+          "totalItems",
+          "totalPages"
+        ]
       },
       "PostAdminSummary": {
         "type": "object",
@@ -2614,7 +2951,10 @@
             ]
           },
           "publishedAt": {
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "format": "date-time"
           },
           "scheduled": {
@@ -2640,7 +2980,16 @@
             "type": "string",
             "format": "date-time"
           }
-        }
+        },
+        "required": [
+          "id",
+          "scheduled",
+          "status",
+          "tags",
+          "translations",
+          "updatedAt",
+          "version"
+        ]
       },
       "TranslationTitle": {
         "type": "object",
@@ -2658,7 +3007,12 @@
           "title": {
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "lang",
+          "slug",
+          "title"
+        ]
       },
       "MeResponse": {
         "type": "object",
@@ -2666,7 +3020,10 @@
           "username": {
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "username"
+        ]
       }
     }
   }

@@ -19,8 +19,8 @@ export function ProjectPage() {
 
   const items = experiences.data;
   if (id !== undefined) {
-    const owner = items.find((item) => item.projects?.some((p) => String(p.id) === id));
-    const project = owner?.projects?.find((p) => String(p.id) === id);
+    const owner = items.find((item) => item.projects.some((p) => String(p.id) === id));
+    const project = owner?.projects.find((p) => String(p.id) === id);
     return owner && project ? (
       <ProjectForm key={project.id} experience={owner} project={project} />
     ) : (

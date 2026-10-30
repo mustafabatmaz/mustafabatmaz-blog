@@ -37,7 +37,7 @@ export function MediaCard({ item, actionLabel, actionName, onAction, current }: 
         <div className="flex min-w-0 flex-col gap-0.5">
           <span className="truncate font-mono text-[13px]">{name}</span>
           <span className="font-mono text-xs text-muted-foreground">
-            {item.format} · {formatBytes(item.sizeBytes ?? 0)}
+            {item.format} · {formatBytes(item.sizeBytes)}
             {item.createdAt && ` · ${formatDate(item.createdAt)}`}
           </span>
         </div>
@@ -47,7 +47,7 @@ export function MediaCard({ item, actionLabel, actionName, onAction, current }: 
           ) : (
             <StatusBadge tone="muted">{tr.media.noAlt}</StatusBadge>
           )}
-          {item.metadataStripped === false && (
+          {!item.metadataStripped && (
             <StatusBadge tone="danger">{tr.media.notStrippedBadge}</StatusBadge>
           )}
         </div>

@@ -16,8 +16,8 @@ interface UploadListProps {
 
 function message(entry: UploadEntry) {
   if (entry.status === "done" && entry.media) {
-    const size = formatBytes(entry.media.sizeBytes ?? entry.size);
-    return `${size} · ${entry.media.metadataStripped === false ? tr.media.notStripped : tr.media.stripped}`;
+    const size = formatBytes(entry.media.sizeBytes);
+    return `${size} · ${entry.media.metadataStripped ? tr.media.stripped : tr.media.notStripped}`;
   }
   if (entry.status === "error" && entry.problem) {
     const text = tr.media.problems[entry.problem];

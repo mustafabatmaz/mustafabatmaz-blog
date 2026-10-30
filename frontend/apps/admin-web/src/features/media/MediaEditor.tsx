@@ -50,9 +50,6 @@ export function MediaEditor({ item, onClose }: MediaEditorProps) {
   };
 
   const submit = form.handleSubmit((values) => {
-    if (item.id === undefined) {
-      return;
-    }
     save.mutate(
       { id: item.id, body: toMediaRequest(values, item.version) },
       {
@@ -76,9 +73,6 @@ export function MediaEditor({ item, onClose }: MediaEditorProps) {
 
   const deleteImage = () => {
     setConfirmingDelete(false);
-    if (item.id === undefined) {
-      return;
-    }
     remove.mutate(item.id, {
       onSuccess: () => {
         announce(tr.media.removed(name));
@@ -139,7 +133,7 @@ export function MediaEditor({ item, onClose }: MediaEditorProps) {
                 <dd className="font-mono text-[13px] break-all">{name}</dd>
                 <dt className="text-muted-foreground">{tr.media.typeAndSize}</dt>
                 <dd className="font-mono text-[13px]">
-                  {item.format} · {formatBytes(item.sizeBytes ?? 0)}
+                  {item.format} · {formatBytes(item.sizeBytes)}
                 </dd>
                 {item.createdAt && (
                   <>
@@ -152,7 +146,7 @@ export function MediaEditor({ item, onClose }: MediaEditorProps) {
                   {item.metadataStripped ? tr.media.metadataStripped : tr.media.metadataNotStripped}
                 </dd>
               </dl>
-              {item.metadataStripped === false && (
+              {!item.metadataStripped && (
                 <p className="rounded-2xl border border-destructive-border bg-destructive-soft px-3.5 py-3 text-sm text-destructive">
                   {tr.media.avifWarning}
                 </p>
@@ -163,13 +157,13 @@ export function MediaEditor({ item, onClose }: MediaEditorProps) {
                     <Input
                       {...field}
                       readOnly
-                      value={item.url ?? ""}
+                      value={item.url}
                       className="min-w-0 flex-1 font-mono text-xs"
                     />
                     <Button
                       variant="outline"
                       onClick={() => {
-                        void navigator.clipboard.writeText(item.url ?? "").then(() => {
+                        void navigator.clipboard.writeText(item.url).then(() => {
                           announce(tr.media.copied);
                         });
                       }}

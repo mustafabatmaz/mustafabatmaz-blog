@@ -44,7 +44,7 @@ export function PostsPage() {
   return (
     <>
       <PageHeader
-        kicker={data ? tr.posts.count(data.totalItems ?? 0) : tr.nav.content}
+        kicker={data ? tr.posts.count(data.totalItems) : tr.nav.content}
         title={tr.posts.title}
         actions={
           <Button render={<Link to="/posts/new" />}>
@@ -151,7 +151,7 @@ export function PostsPage() {
 
 function PostRow({ item }: { item: PostSummary }) {
   const state = postState(item);
-  const languages = new Set((item.translations ?? []).map((t) => t.lang));
+  const languages = new Set(item.translations.map((t) => t.lang));
   return (
     <tr className="border-t">
       <td className="px-5 py-4">

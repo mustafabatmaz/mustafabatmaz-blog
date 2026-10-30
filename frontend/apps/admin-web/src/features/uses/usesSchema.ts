@@ -65,6 +65,6 @@ export function toUsesRequest(
 
 // Turkish name first, English if that's all there is
 export function displayName(item: UsesItem) {
-  const byLang = (lang: "tr" | "en") => item.translations?.find((t) => t.lang === lang)?.name;
+  const byLang = (lang: "tr" | "en") => item.translations.find((t) => t.lang === lang)?.name;
   return byLang("tr") ?? byLang("en") ?? tr.uses.unnamed;
 }

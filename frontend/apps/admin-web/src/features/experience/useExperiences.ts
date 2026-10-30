@@ -8,7 +8,7 @@ export const experiencesKey = ["experiences"] as const;
 
 // The backend lists the newest start first; local cache updates keep that order
 function newestFirst(items: Experience[]) {
-  return [...items].sort((a, b) => (b.startMonth ?? "").localeCompare(a.startMonth ?? ""));
+  return [...items].sort((a, b) => b.startMonth.localeCompare(a.startMonth));
 }
 
 export function useExperiences() {
@@ -81,7 +81,7 @@ export function useDeleteProject() {
       queryClient.setQueryData<Experience[]>(experiencesKey, (items = []) =>
         items.map((item) => ({
           ...item,
-          projects: item.projects?.filter((project) => project.id !== id),
+          projects: item.projects.filter((project) => project.id !== id),
         })),
       );
     },

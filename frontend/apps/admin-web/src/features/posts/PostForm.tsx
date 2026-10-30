@@ -61,7 +61,7 @@ export function PostForm({ post }: { post: Post | null }) {
     name: ["mode", "publishAt", "translations"],
   });
 
-  const savedSlug = (lang: Language) => post?.translations?.find((t) => t.lang === lang)?.slug;
+  const savedSlug = (lang: Language) => post?.translations.find((t) => t.lang === lang)?.slug;
   // Only a post that is live has addresses that a changed slug would break
   const live = post !== null && postState(post) === "published";
 
@@ -148,7 +148,7 @@ export function PostForm({ post }: { post: Post | null }) {
   };
 
   const readingTimes = (post?.translations ?? [])
-    .map((t) => tr.posts.minutes((t.lang ?? "").toUpperCase(), t.readingMinutes ?? 0))
+    .map((t) => tr.posts.minutes(t.lang.toUpperCase(), t.readingMinutes))
     .join(" · ");
 
   return (

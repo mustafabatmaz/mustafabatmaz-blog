@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.Instant;
 import java.util.List;
+import org.jspecify.annotations.Nullable;
 
 /** Request and response bodies of the media API. */
 public final class MediaDtos {
@@ -26,7 +27,7 @@ public final class MediaDtos {
             ImageFormat format,
             String contentType,
             long sizeBytes,
-            String originalFilename,
+            @Nullable String originalFilename,
             boolean metadataStripped,
             List<MediaTranslationDto> translations,
             long version,
@@ -34,7 +35,9 @@ public final class MediaDtos {
             Instant updatedAt) {}
 
     /** An empty list removes all alt texts. */
-    public record MediaAdminRequest(@NotNull @Valid List<MediaTranslationDto> translations, Long version) {}
+    public record MediaAdminRequest(
+            @NotNull @Valid List<MediaTranslationDto> translations,
+            @Nullable Long version) {}
 
     public record MediaTranslationDto(
             @NotNull Language lang,

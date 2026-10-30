@@ -32,7 +32,7 @@ export function UsesPage() {
   };
 
   const move = (item: UsesItem, direction: "up" | "down") => {
-    const ids = item.id === undefined ? null : moveWithinCategory(items, item.id, direction);
+    const ids = moveWithinCategory(items, item.id, direction);
     if (!ids) {
       return;
     }
@@ -96,10 +96,8 @@ export function UsesPage() {
           <ul className="overflow-hidden rounded-2xl border bg-card">
             {group.items.map((item, index) => {
               const name = displayName(item);
-              const description = item.translations?.find((t) => t.description)?.description;
-              const languages = (item.translations ?? [])
-                .map((t) => t.lang.toUpperCase())
-                .join(" ");
+              const description = item.translations.find((t) => t.description)?.description;
+              const languages = item.translations.map((t) => t.lang.toUpperCase()).join(" ");
               return (
                 // key={item.id}: a moved row keeps its DOM element, and with it the focus (Angular trackBy)
                 <li

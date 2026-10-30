@@ -40,9 +40,9 @@ export function ExperiencePage() {
   const items = experiences.data ?? [];
 
   const move = (experience: Experience, project: Project, direction: "up" | "down") => {
-    const ids = (experience.projects ?? []).map((p) => p.id ?? 0);
-    const moved = project.id === undefined ? null : moveId(ids, project.id, direction);
-    if (!moved || experience.id === undefined) {
+    const ids = experience.projects.map((p) => p.id);
+    const moved = moveId(ids, project.id, direction);
+    if (!moved) {
       return;
     }
     reorder.mutate(
@@ -64,7 +64,7 @@ export function ExperiencePage() {
       return;
     }
     if (deleting.kind === "experience") {
-      const company = deleting.item.company ?? "";
+      const company = deleting.item.company;
       deleteExperience.mutate(deleting.item.id, {
         onSuccess: () => {
           announce(tr.uses.removed(company));
@@ -83,8 +83,8 @@ export function ExperiencePage() {
 
   const deleteDescription = () => {
     if (deleting?.kind === "experience") {
-      const count = deleting.item.projects?.length ?? 0;
-      const company = deleting.item.company ?? "";
+      const count = deleting.item.projects.length;
+      const company = deleting.item.company;
       return count > 0
         ? tr.experience.deleteWithProjects(company, count)
         : tr.experience.deleteExperience(company);
@@ -125,8 +125,8 @@ export function ExperiencePage() {
       )}
 
       {items.map((experience) => {
-        const company = experience.company ?? "";
-        const projects = experience.projects ?? [];
+        const company = experience.company;
+        const projects = experience.projects;
         return (
           <section
             key={experience.id}
@@ -178,7 +178,7 @@ export function ExperiencePage() {
                 <ul className="flex flex-col gap-2">
                   {projects.map((project, index) => {
                     const name = projectName(project);
-                    const client = project.translations?.find((t) => t.client)?.client;
+                    const client = project.translations.find((t) => t.client)?.client;
                     return (
                       <li
                         key={project.id}
@@ -192,7 +192,7 @@ export function ExperiencePage() {
                             )}
                           </span>
                           <span className="flex flex-wrap gap-1.5">
-                            {(project.technologies ?? []).map((technology) => (
+                            {project.technologies.map((technology) => (
                               <span
                                 key={technology}
                                 className="rounded-full bg-mint px-2.5 py-0.5 font-mono text-[11px] text-mint-foreground"
@@ -277,7 +277,7 @@ export function ExperiencePage() {
             setEditing(undefined);
           }}
           onSaved={(saved) => {
-            announce(tr.uses.saved(saved.company ?? ""));
+            announce(tr.uses.saved(saved.company));
           }}
         />
       )}
