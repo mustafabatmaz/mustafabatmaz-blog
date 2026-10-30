@@ -14,5 +14,8 @@ public final class ProblemTypes {
     /** Another record already uses this slug: pick a different one. */
     public static final URI SLUG_TAKEN = URI.create("https://mustafabatmaz.com/problems/slug-taken");
 
+    /** Another record (e.g. a post's cover) still points at this image, so it can't be deleted. */
+    public static final URI MEDIA_IN_USE = URI.create("https://mustafabatmaz.com/problems/media-in-use");
+
     private ProblemTypes() {}
 }

@@ -1383,7 +1383,7 @@ export interface operations {
             content: {
                 "multipart/form-data": {
                     /** Format: binary */
-                    file: string;
+                    file: Blob;
                 };
             };
         };
@@ -1664,7 +1664,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": string;
+                    "application/json": Blob;
                 };
             };
         };
