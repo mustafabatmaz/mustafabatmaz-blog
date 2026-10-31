@@ -106,7 +106,7 @@ describe("post editor", () => {
         {
           lang: "tr",
           title: "Kafka'da kaybolan event'ler",
-          slug: "kafka-da-kaybolan-event-ler",
+          slug: "kafkada-kaybolan-eventler",
           bodyMd: "## Giriş",
         },
       ],

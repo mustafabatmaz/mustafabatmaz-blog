@@ -235,6 +235,7 @@ export const tr = {
     postTitle: "Başlık",
     slug: "Slug",
     slugFormat: "Sadece küçük harf, rakam ve tire kullan (ör. kaybolan-eventler).",
+    slugReserved: "Bu slug sitede liste sayfaları için ayrılmış; başka bir slug seç.",
     slugTaken: "Bu slug bu dilde başka bir yazıda kullanılıyor; başka bir slug seç.",
     slugAuto: "Başlıktan otomatik doluyor; istersen değiştir.",
     slugChangeWarning: (link: string) => `Bu yazı yayında: slug değişirse ${link} adresi çalışmaz.`,

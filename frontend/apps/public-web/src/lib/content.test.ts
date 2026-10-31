@@ -6,8 +6,11 @@ import {
   getExperience,
   getLatestPosts,
   getPage,
+  getPost,
+  getPosts,
   getProfile,
   getSocialLinks,
+  getTags,
   getUses,
 } from "./content";
 
@@ -108,5 +111,50 @@ describe("content", () => {
     server.use(http.get("/api/public/profile", ({ response }) => response.untyped(notFound())));
 
     await expect(getSocialLinks("tr")).resolves.toEqual([]);
+  });
+
+  it("shouldAskForThePageAndTag_ofThePostList", async () => {
+    let query = new URLSearchParams();
+    server.use(
+      http.get("/api/public/posts", ({ request, response }) => {
+        query = new URL(request.url).searchParams;
+        return response(200).json({ items: [], page: 2, size: 10, totalItems: 11, totalPages: 2 });
+      }),
+    );
+
+    await getPosts("en", 2, "kafka");
+
+    expect(query.get("lang")).toBe("en");
+    expect(query.get("page")).toBe("2");
+    expect(query.get("tag")).toBe("kafka");
+  });
+
+  it("shouldLeaveOutTheTag_whenListingEveryPost", async () => {
+    let query = new URLSearchParams();
+    server.use(
+      http.get("/api/public/posts", ({ request, response }) => {
+        query = new URL(request.url).searchParams;
+        return response(200).json({ items: [], page: 1, size: 10, totalItems: 0, totalPages: 0 });
+      }),
+    );
+
+    await getPosts("tr", 1);
+
+    expect(query.has("tag")).toBe(false);
+  });
+
+  it("shouldReturnNull_whenThePostIsNotInThisLanguage", async () => {
+    server.use(
+      http.get("/api/public/posts/{slug}", ({ response }) => response.untyped(notFound())),
+    );
+
+    await expect(getPost("kafkada-kaybolan-eventler", "en")).resolves.toBeNull();
+  });
+
+  it("shouldReturnTheTags_withTheirPostCounts", async () => {
+    const tags = [{ name: "Kafka", slug: "kafka", postCount: 3 }];
+    server.use(http.get("/api/public/tags", ({ response }) => response(200).json(tags)));
+
+    await expect(getTags("tr")).resolves.toEqual(tags);
   });
 });

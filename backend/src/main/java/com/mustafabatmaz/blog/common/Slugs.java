@@ -34,7 +34,10 @@ public final class Slugs {
         for (char c : text.toCharArray()) {
             mapped.append(TURKISH.getOrDefault(c, c));
         }
-        String slug = Normalizer.normalize(mapped, Normalizer.Form.NFD)
+        // Apostrophes are dropped, not turned into dashes: "Kafka'da" becomes "kafkada", keeping a Turkish suffix
+        // with its word (straight ', typographic ’ and the modifier letter ʼ)
+        String withoutApostrophes = mapped.toString().replaceAll("['\u2019\u02BC]", "");
+        String slug = Normalizer.normalize(withoutApostrophes, Normalizer.Form.NFD)
                 .replaceAll("\\p{M}", "") // accents left after decomposition (é → e)
                 .toLowerCase(Locale.ROOT)
                 .replaceAll("[^a-z0-9]+", "-")

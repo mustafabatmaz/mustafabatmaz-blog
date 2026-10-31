@@ -1,0 +1,17 @@
+{
+  "name": "@blog/slug",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/slug.ts"
+  },
+  "scripts": {
+    "lint": "eslint . && prettier --check .",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "vitest": "^5.0.5"
+  }
+}

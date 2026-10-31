@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { tr } from "@/i18n/tr";
 import { isProblem, PROBLEM_TYPES } from "@/lib/problem";
-import { slugify } from "@/lib/slug";
+import { slugify } from "@blog/slug";
 import { firstLanguageWithErrors, type Language } from "@/lib/translations";
 import { hasCaseStudy, type Experience, type Project } from "./experienceSchema";
 import { fromProject, MAX_TECHNOLOGIES, projectSchema, toProjectRequest } from "./projectSchema";

@@ -22,6 +22,13 @@ class SlugsTest {
     }
 
     @Test
+    void shouldDropApostrophes_soSuffixesStayWithTheirWord() {
+        assertThat(Slugs.slugify("Kafka'da kaybolan event'ler")).isEqualTo("kafkada-kaybolan-eventler");
+        assertThat(Slugs.slugify("Spring\u2019in yeni sürümü")).isEqualTo("springin-yeni-surumu");
+        assertThat(Slugs.slugify("Don\u02BCt panic")).isEqualTo("dont-panic");
+    }
+
+    @Test
     void shouldDropOtherAccents() {
         assertThat(Slugs.slugify("Café Déjà Vu")).isEqualTo("cafe-deja-vu");
     }

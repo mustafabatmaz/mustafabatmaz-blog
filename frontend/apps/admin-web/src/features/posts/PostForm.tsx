@@ -18,7 +18,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { tr } from "@/i18n/tr";
 import { formatDateTime } from "@/lib/format";
 import { isProblem, PROBLEM_TYPES } from "@/lib/problem";
-import { slugify } from "@/lib/slug";
+import { slugify } from "@blog/slug";
 import { firstLanguageWithErrors, LANGUAGES, type Language } from "@/lib/translations";
 import { CoverField } from "./CoverField";
 import { fromPost, MAX_TAGS, postSchema, postTitle, toPostRequest, type Post } from "./postSchema";

@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./highlighted": "./src/highlighted.ts"
   },
   "scripts": {
     "lint": "eslint . && prettier --check .",
@@ -12,11 +13,17 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@blog/slug": "workspace:*",
+    "@shikijs/rehype": "4.5.0",
+    "mdast-util-from-markdown": "^2.1.0",
+    "mdast-util-to-string": "^4.0.0",
     "react-markdown": "^10.1.0",
     "rehype-sanitize": "^6.0.0",
-    "remark-gfm": "^4.0.1"
+    "remark-gfm": "^4.0.1",
+    "shiki": "4.5.0"
   },
   "devDependencies": {
+    "@types/hast": "^3.0.5",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "react": "^19.3.1",
