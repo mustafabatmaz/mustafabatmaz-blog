@@ -42,7 +42,7 @@ infra/       Docker Compose and nginx configuration
 - [x] Phase 2: authentication
 - [x] Phase 3: content modules and API
 - [x] Phase 4: admin panel
-- [ ] Phase 5: public website
+- [x] Phase 5: public website
 - [ ] Phase 6: full Docker stack and setup guide
 
 ## Getting started
@@ -54,8 +54,9 @@ cp infra/.env.example infra/.env    # then edit the values
 docker compose -f infra/compose.yaml up --build
 ```
 
-This starts PostgreSQL, the API and the admin panel:
+This starts PostgreSQL, the API, the public website and the admin panel:
 
+- Public website: http://localhost:3000 (`SITE_URL` in `infra/.env` is the address used in share images, canonical links, the sitemap and RSS)
 - Admin panel: http://localhost:8081 (nginx serves the app and passes `/api` to the backend)
 - API: http://localhost:8080, reachable from this machine only. Health check: http://localhost:8080/actuator/health
 
@@ -106,7 +107,9 @@ The public site is a Next.js app in `frontend/apps/public-web`. It reads the pub
 pnpm --filter @blog/public-web dev    # http://localhost:3000 (redirects to /tr or /en)
 ```
 
-Pages are rendered on their first visit and refreshed at most once a minute, so `next build` doesn't need a running backend. Content comes from the admin panel: the profile (including education), the About and Now pages, uses and experience.
+Pages are rendered on their first visit and refreshed at most once a minute, so `next build` doesn't need a running backend. Content comes from the admin panel: the profile (including education), the About and Now pages, uses, experience and posts.
+
+The Docker image is built from `frontend/apps/public-web/Dockerfile`: Next.js's standalone server (`server.js` with only the files it needs), run as a non-root user. Security headers and the Content Security Policy are set in `next.config.ts`. `docker compose -f infra/compose.yaml up --build public-web` rebuilds it; the backend's address is baked into the build for the image proxy (`/api/public/media`), so it is a build argument as well as an environment variable.
 
 ### API types
 

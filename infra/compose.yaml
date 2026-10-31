@@ -69,6 +69,31 @@ services:
       timeout: 5s
       retries: 3
 
+  public-web:
+    build:
+      context: ../frontend
+      dockerfile: apps/public-web/Dockerfile
+      args:
+        # Written into the build: the /api/public/media rewrite's destination
+        API_BASE_URL: http://backend:8080
+    environment:
+      # Read at run time: the pages' API calls, and the address in OG images, canonical links, sitemap and RSS
+      API_BASE_URL: http://backend:8080
+      SITE_URL: ${SITE_URL}
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      # robots.txt answers without the backend, so a backend outage doesn't mark the site unhealthy too.
+      # 127.0.0.1: "localhost" could resolve to ::1
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:3000/robots.txt"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
 volumes:
   pgdata:
   media:
