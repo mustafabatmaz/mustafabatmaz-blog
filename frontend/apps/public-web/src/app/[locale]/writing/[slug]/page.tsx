@@ -1,4 +1,5 @@
-import { extractHeadings, HighlightedMarkdownArticle } from "@blog/markdown";
+import { extractHeadings } from "@blog/markdown";
+import { HighlightedMarkdownArticle } from "@blog/markdown/highlighted";
 import { getFormatter, getLocale, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { ArticleLayout } from "@/features/writing/ArticleLayout";
