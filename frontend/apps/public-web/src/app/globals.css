@@ -1,0 +1,21 @@
+/* Shared Indigo Mist tokens come from @blog/tokens; this file adds the fonts (next/font, see fonts.ts). */
+@import "tailwindcss";
+@import "@blog/tokens/theme.css";
+
+@theme inline {
+  --font-sans: var(--font-space-grotesk), system-ui, sans-serif;
+  --font-heading: var(--font-sans);
+  --font-mono: var(--font-space-mono), ui-monospace, monospace;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}

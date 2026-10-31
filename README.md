@@ -30,7 +30,8 @@ admin-web (Vite + React)  ──┘
 
 ```
 backend/     Spring Boot application
-frontend/    pnpm workspace: admin-web, public-web, api-client (generated API types), markdown (shared renderer)
+frontend/    pnpm workspace: admin-web, public-web, api-client (generated API types), markdown (shared renderer),
+             tokens (shared design tokens)
 infra/       Docker Compose and nginx configuration
 ```
 
@@ -96,6 +97,16 @@ pnpm lint && pnpm typecheck && pnpm test && pnpm -r build
 ```
 
 The Docker image is built from `frontend/apps/admin-web/Dockerfile` (static files served by nginx, config in `infra/nginx/`); `docker compose -f infra/compose.yaml up --build admin-web` rebuilds it.
+
+### Public website (development)
+
+The public site is a Next.js app in `frontend/apps/public-web`. It reads the public API on the server, so the browser never talks to the backend directly; `API_BASE_URL` points it there (default http://localhost:8080).
+
+```bash
+pnpm --filter @blog/public-web dev    # http://localhost:3000 (redirects to /tr or /en)
+```
+
+Pages are rendered on their first visit and refreshed at most once a minute, so `next build` doesn't need a running backend.
 
 ### API types
 

@@ -1,0 +1,35 @@
+{
+  "site": {
+    "name": "Mustafa Batmaz",
+    "techLine": "Java 21 · Spring Boot · Next.js"
+  },
+  "nav": {
+    "label": "Ana menü",
+    "home": "Ana sayfa",
+    "writing": "Yazılar",
+    "experience": "Deneyim",
+    "about": "Hakkımda",
+    "now": "Şimdi",
+    "uses": "Kullandıklarım"
+  },
+  "language": {
+    "label": "Dil",
+    "tr": "Türkçe",
+    "en": "English"
+  },
+  "theme": {
+    "toggle": "Temayı değiştir"
+  },
+  "notFound": {
+    "title": "Sayfa bulunamadı",
+    "text": "Aradığın sayfa hiç olmamış ya da adresi değişmiş olabilir. Buradan devam edebilirsin:",
+    "home": "Ana sayfa",
+    "writing": "Yazılar"
+  },
+  "error": {
+    "title": "Bir şeyler ters gitti",
+    "text": "Sayfa şu an yüklenemedi. Sorun bizde; biraz sonra tekrar denemen yeterli.",
+    "retry": "Tekrar dene",
+    "home": "Ana sayfa"
+  }
+}
