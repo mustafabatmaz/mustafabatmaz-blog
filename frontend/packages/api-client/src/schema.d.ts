@@ -515,6 +515,19 @@ export interface components {
             /** Format: date-time */
             updatedAt: string;
         };
+        EducationDto: {
+            school: string;
+            /** Format: int32 */
+            startYear: number;
+            /** Format: int32 */
+            endYear?: number | null;
+            translations: components["schemas"]["EducationTranslationDto"][];
+        };
+        EducationTranslationDto: {
+            /** @enum {string} */
+            lang: "tr" | "en";
+            degree: string;
+        };
         ProfileAdminRequest: {
             fullName: string;
             /** Format: email */
@@ -522,6 +535,7 @@ export interface components {
             location?: string | null;
             translations: components["schemas"]["ProfileTranslationDto"][];
             socialLinks: components["schemas"]["SocialLinkDto"][];
+            education: components["schemas"]["EducationDto"][];
             /** Format: int64 */
             version?: number | null;
         };
@@ -542,6 +556,7 @@ export interface components {
             location?: string | null;
             translations: components["schemas"]["ProfileTranslationDto"][];
             socialLinks: components["schemas"]["SocialLinkDto"][];
+            education: components["schemas"]["EducationDto"][];
             /** Format: int64 */
             version: number;
             /** Format: date-time */
@@ -697,6 +712,16 @@ export interface components {
             /** Format: int64 */
             postCount: number;
         };
+        EducationResponse: {
+            school: string;
+            degree: string;
+            /** Format: int32 */
+            startYear: number;
+            /** Format: int32 */
+            endYear?: number | null;
+            /** @enum {string} */
+            lang: "tr" | "en";
+        };
         ProfileResponse: {
             fullName: string;
             headline: string;
@@ -706,6 +731,7 @@ export interface components {
             /** @enum {string} */
             lang: "tr" | "en";
             socialLinks: components["schemas"]["SocialLinkDto"][];
+            education: components["schemas"]["EducationResponse"][];
         };
         CoverResponse: {
             url: string;

@@ -1,11 +1,15 @@
 package com.mustafabatmaz.blog.profile.service;
 
+import com.mustafabatmaz.blog.common.BadRequestException;
 import com.mustafabatmaz.blog.common.Language;
 import com.mustafabatmaz.blog.common.NotFoundException;
 import com.mustafabatmaz.blog.common.Translations;
 import com.mustafabatmaz.blog.profile.domain.Profile;
+import com.mustafabatmaz.blog.profile.domain.ProfileEducation;
+import com.mustafabatmaz.blog.profile.domain.ProfileEducationTranslation;
 import com.mustafabatmaz.blog.profile.domain.ProfileTranslation;
 import com.mustafabatmaz.blog.profile.repository.ProfileRepository;
+import com.mustafabatmaz.blog.profile.web.ProfileDtos.EducationDto;
 import com.mustafabatmaz.blog.profile.web.ProfileDtos.ProfileAdminRequest;
 import com.mustafabatmaz.blog.profile.web.ProfileDtos.ProfileAdminResponse;
 import com.mustafabatmaz.blog.profile.web.ProfileDtos.ProfileResponse;
@@ -54,6 +58,19 @@ public class ProfileService {
         profile.clearSocialLinks();
         for (SocialLinkDto link : request.socialLinks()) {
             profile.addSocialLink(link.platform(), link.url());
+        }
+        profile.clearEducation();
+        for (EducationDto item : request.education()) {
+            if (item.endYear() != null && item.endYear() < item.startYear()) {
+                throw new BadRequestException("The end year cannot be before the start year");
+            }
+            ProfileEducation entry = profile.addEducation(item.school(), item.startYear(), item.endYear());
+            Translations.sync(
+                    entry.getTranslations(),
+                    item.translations(),
+                    t -> t.lang(),
+                    t -> new ProfileEducationTranslation(entry, t.lang(), t.degree()),
+                    (existing, t) -> existing.update(t.degree()));
         }
         profile.touch(clock.instant());
 

@@ -6,7 +6,7 @@ const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
   // The workspace packages ship TypeScript source; Next compiles them like app code
-  transpilePackages: ["@blog/api-client"],
+  transpilePackages: ["@blog/api-client", "@blog/markdown"],
 };
 
 export default withNextIntl(nextConfig);

@@ -8,6 +8,7 @@ const profile = {
   headline: "Senior Software Developer",
   lang: "en" as const,
   socialLinks: [],
+  education: [],
 };
 
 describe("dataOrNull", () => {

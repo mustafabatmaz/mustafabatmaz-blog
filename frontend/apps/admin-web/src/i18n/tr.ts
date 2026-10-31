@@ -86,6 +86,23 @@ export const tr = {
     moved: (platform: string, position: number) =>
       `${platform} linki ${String(position)}. sıraya taşındı`,
     removed: (platform: string) => `${platform} linki kaldırıldı`,
+    education: "Eğitim",
+    noEducation: "Henüz eğitim eklenmedi.",
+    educationEntry: (position: number) => `${String(position)}. eğitim`,
+    school: "Okul",
+    startYear: "Başlangıç yılı",
+    endYear: "Bitiş yılı",
+    ongoing: "Devam ediyor",
+    degree: (lang: string) => `Bölüm (${lang})`,
+    addEducation: "Eğitim ekle",
+    educationMoveUp: (school: string) => `${school} kaydını yukarı taşı`,
+    educationMoveDown: (school: string) => `${school} kaydını aşağı taşı`,
+    educationRemove: (school: string) => `${school} kaydını kaldır`,
+    educationMoved: (school: string, position: number) =>
+      `${school} ${String(position)}. sıraya taşındı`,
+    educationRemoved: (school: string) => `${school} kaldırıldı`,
+    endYearBeforeStart: "Bitiş yılı başlangıçtan önce olamaz.",
+    degreeRequired: "En az bir dilde bölüm adı gir.",
   },
   pages: {
     title: "Sayfalar",

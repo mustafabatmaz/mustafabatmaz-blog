@@ -1592,6 +1592,64 @@
           "version"
         ]
       },
+      "EducationDto": {
+        "type": "object",
+        "properties": {
+          "school": {
+            "type": "string",
+            "maxLength": 150,
+            "minLength": 0
+          },
+          "startYear": {
+            "type": "integer",
+            "format": "int32",
+            "maximum": 2100,
+            "minimum": 1950
+          },
+          "endYear": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int32",
+            "maximum": 2100,
+            "minimum": 1950
+          },
+          "translations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EducationTranslationDto"
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "school",
+          "startYear",
+          "translations"
+        ]
+      },
+      "EducationTranslationDto": {
+        "type": "object",
+        "properties": {
+          "lang": {
+            "type": "string",
+            "enum": [
+              "tr",
+              "en"
+            ]
+          },
+          "degree": {
+            "type": "string",
+            "maxLength": 150,
+            "minLength": 0
+          }
+        },
+        "required": [
+          "degree",
+          "lang"
+        ]
+      },
       "ProfileAdminRequest": {
         "type": "object",
         "properties": {
@@ -1632,6 +1690,14 @@
             "maxItems": 20,
             "minItems": 0
           },
+          "education": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EducationDto"
+            },
+            "maxItems": 10,
+            "minItems": 0
+          },
           "version": {
             "type": [
               "integer",
@@ -1641,6 +1707,7 @@
           }
         },
         "required": [
+          "education",
           "fullName",
           "socialLinks",
           "translations"
@@ -1730,6 +1797,12 @@
               "$ref": "#/components/schemas/SocialLinkDto"
             }
           },
+          "education": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EducationDto"
+            }
+          },
           "version": {
             "type": "integer",
             "format": "int64"
@@ -1740,6 +1813,7 @@
           }
         },
         "required": [
+          "education",
           "fullName",
           "socialLinks",
           "translations",
@@ -2366,6 +2440,41 @@
           "slug"
         ]
       },
+      "EducationResponse": {
+        "type": "object",
+        "properties": {
+          "school": {
+            "type": "string"
+          },
+          "degree": {
+            "type": "string"
+          },
+          "startYear": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "endYear": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int32"
+          },
+          "lang": {
+            "type": "string",
+            "enum": [
+              "tr",
+              "en"
+            ]
+          }
+        },
+        "required": [
+          "degree",
+          "lang",
+          "school",
+          "startYear"
+        ]
+      },
       "ProfileResponse": {
         "type": "object",
         "properties": {
@@ -2405,9 +2514,16 @@
             "items": {
               "$ref": "#/components/schemas/SocialLinkDto"
             }
+          },
+          "education": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EducationResponse"
+            }
           }
         },
         "required": [
+          "education",
           "fullName",
           "headline",
           "lang",

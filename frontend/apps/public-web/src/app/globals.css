@@ -1,6 +1,8 @@
 /* Shared Indigo Mist tokens come from @blog/tokens; this file adds the fonts (next/font, see fonts.ts). */
 @import "tailwindcss";
 @import "@blog/tokens/theme.css";
+/* Tailwind skips node_modules, where the workspace package is linked; scan its source directly */
+@source "../../../../packages/markdown/src";
 
 @theme inline {
   --font-sans: var(--font-space-grotesk), system-ui, sans-serif;

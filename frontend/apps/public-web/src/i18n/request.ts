@@ -19,5 +19,6 @@ export default getRequestConfig(async ({ locale }) => {
     }
     locale = fromPath;
   }
-  return { locale, messages: (await messages[locale]()).default };
+  // Dates are shown in the site owner's time zone, the same on the server and in the browser
+  return { locale, timeZone: "Europe/Istanbul", messages: (await messages[locale]()).default };
 });
