@@ -11,11 +11,10 @@ export const getProfile = cache((lang: Locale) =>
   dataOrNull(api.GET("/api/public/profile", { params: { query: { lang } } })),
 );
 
-export function getPage(key: Schemas["PageResponse"]["key"], lang: Locale) {
-  return dataOrNull(
-    api.GET("/api/public/pages/{key}", { params: { path: { key }, query: { lang } } }),
-  );
-}
+// cache(): the page and its generateMetadata ask for the same data in one render; one request serves both
+export const getPage = cache((key: Schemas["PageResponse"]["key"], lang: Locale) =>
+  dataOrNull(api.GET("/api/public/pages/{key}", { params: { path: { key }, query: { lang } } })),
+);
 
 export async function getUses(lang: Locale) {
   return (await dataOrNull(api.GET("/api/public/uses", { params: { query: { lang } } }))) ?? [];
@@ -28,13 +27,13 @@ export async function getExperience(lang: Locale) {
 }
 
 // null: the project doesn't exist or has no case study in any language
-export function getCaseStudy(slug: string, lang: Locale) {
-  return dataOrNull(
+export const getCaseStudy = cache((slug: string, lang: Locale) =>
+  dataOrNull(
     api.GET("/api/public/experience/projects/{slug}", {
       params: { path: { slug }, query: { lang } },
     }),
-  );
-}
+  ),
+);
 
 // One page of posts in this language, optionally with one tag; null if the API says the page doesn't exist
 export function getPosts(lang: Locale, page: number, tag?: string) {
@@ -44,11 +43,9 @@ export function getPosts(lang: Locale, page: number, tag?: string) {
 }
 
 // null: no published post with this slug in this language (posts don't fall back to the other one)
-export function getPost(slug: string, lang: Locale) {
-  return dataOrNull(
-    api.GET("/api/public/posts/{slug}", { params: { path: { slug }, query: { lang } } }),
-  );
-}
+export const getPost = cache((slug: string, lang: Locale) =>
+  dataOrNull(api.GET("/api/public/posts/{slug}", { params: { path: { slug }, query: { lang } } })),
+);
 
 // The tags of the posts published in this language, with how many each
 export async function getTags(lang: Locale) {

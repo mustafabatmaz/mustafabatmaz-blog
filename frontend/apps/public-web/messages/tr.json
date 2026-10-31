@@ -1,6 +1,9 @@
 {
   "site": {
-    "name": "Mustafa Batmaz"
+    "name": "Mustafa Batmaz",
+    "rss": "RSS",
+    "feedTitle": "Mustafa Batmaz · Yazılar",
+    "defaultDescription": "Java ve Spring Boot ile kurumsal backend sistemleri: deneyim, projeler ve az ama öz yazılar."
   },
   "nav": {
     "label": "Ana menü",

@@ -1,11 +1,33 @@
 import { extractHeadings } from "@blog/markdown";
+import type { Metadata } from "next";
 import { HighlightedMarkdownArticle } from "@blog/markdown/highlighted";
 import { getFormatter, getLocale, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { ArticleLayout } from "@/features/writing/ArticleLayout";
 import { PostTags } from "@/features/writing/PostTags";
 import { Link } from "@/i18n/navigation";
+import { nowSummary } from "@/features/now/nowSummary";
 import { getPost } from "@/lib/content";
+import { pageMetadata, postAlternates } from "@/lib/seo";
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/writing/[slug]">): Promise<Metadata> {
+  const { slug } = await params;
+  const locale = await getLocale();
+  const [post, t] = await Promise.all([getPost(slug, locale), getTranslations("site")]);
+  if (!post) {
+    return {};
+  }
+  return pageMetadata({
+    locale,
+    title: post.title,
+    description: post.summary ?? nowSummary(post.bodyMd),
+    alternates: postAlternates(locale, post.slug, post.availableTranslations),
+    siteName: t("name"),
+    article: { publishedTime: post.publishedAt, tags: post.tags.map((tag) => tag.name) },
+  });
+}
 
 // A post (C-Post). Posts never fall back to the other language: a slug missing in this one is a 404.
 export default async function PostPage({ params }: PageProps<"/[locale]/writing/[slug]">) {

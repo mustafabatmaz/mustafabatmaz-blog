@@ -1,6 +1,9 @@
 {
   "site": {
-    "name": "Mustafa Batmaz"
+    "name": "Mustafa Batmaz",
+    "rss": "RSS",
+    "feedTitle": "Mustafa Batmaz · Writing",
+    "defaultDescription": "Enterprise backend systems with Java and Spring Boot: experience, projects and a few focused posts."
   },
   "nav": {
     "label": "Main menu",

@@ -1,5 +1,6 @@
 import { extractHeadings } from "@blog/markdown";
 import { HighlightedMarkdownArticle } from "@blog/markdown/highlighted";
+import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { Chip } from "@/components/content/Chip";
@@ -9,7 +10,27 @@ import { Highlights } from "@/features/experience/Highlights";
 import { ArticleLayout } from "@/features/writing/ArticleLayout";
 import { yearOf, yearRange } from "@/features/experience/years";
 import { Link } from "@/i18n/navigation";
+import { nowSummary } from "@/features/now/nowSummary";
 import { getCaseStudy } from "@/lib/content";
+import { pageAlternates, pageMetadata } from "@/lib/seo";
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/experience/[slug]">): Promise<Metadata> {
+  const { slug } = await params;
+  const locale = await getLocale();
+  const [study, t] = await Promise.all([getCaseStudy(slug, locale), getTranslations("site")]);
+  if (!study) {
+    return {};
+  }
+  return pageMetadata({
+    locale,
+    title: study.name,
+    description: study.description ?? nowSummary(study.caseStudyMd),
+    alternates: pageAlternates(`/experience/${study.slug}`, locale),
+    siteName: t("name"),
+  });
+}
 
 // A project's case study (public canvas, "Vaka analizi" draft), laid out like a post with its table of contents
 export default async function CaseStudyPage({ params }: PageProps<"/[locale]/experience/[slug]">) {

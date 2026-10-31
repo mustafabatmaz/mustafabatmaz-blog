@@ -1,10 +1,24 @@
+import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
+import { pageAlternates, pageMetadata } from "@/lib/seo";
 import { Chip } from "@/components/content/Chip";
 import { PageHero } from "@/components/content/PageHero";
 import { Highlights } from "@/features/experience/Highlights";
 import { yearOf, yearRange } from "@/features/experience/years";
 import { Link } from "@/i18n/navigation";
 import { getExperience, getProfile } from "@/lib/content";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  const t = await getTranslations();
+  return pageMetadata({
+    locale,
+    title: t("experience.title"),
+    description: t("experience.intro"),
+    alternates: pageAlternates("/experience", locale),
+    siteName: t("site.name"),
+  });
+}
 
 // The timeline (C-Experience): dates, company and role on the left, the projects as cards on the right
 export default async function ExperiencePage() {

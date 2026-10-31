@@ -1,6 +1,20 @@
+import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
+import { pageAlternates, pageMetadata } from "@/lib/seo";
 import { PageHero } from "@/components/content/PageHero";
 import { getUses } from "@/lib/content";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  const t = await getTranslations();
+  return pageMetadata({
+    locale,
+    title: t("uses.title"),
+    description: t("uses.intro"),
+    alternates: pageAlternates("/uses", locale),
+    siteName: t("site.name"),
+  });
+}
 
 // Grouped by category like the experience timeline (public canvas, "Kullandıklarım" draft)
 export default async function UsesPage() {

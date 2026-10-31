@@ -50,6 +50,9 @@ describe("proxy", () => {
     );
     expect(unstable_doesMiddlewareMatch({ config, url: "/api/public/media/a.webp" })).toBe(false);
     expect(unstable_doesMiddlewareMatch({ config, url: "/favicon.ico" })).toBe(false);
+    // The icons live at the root, outside the language prefix
+    expect(unstable_doesMiddlewareMatch({ config, url: "/icon" })).toBe(false);
+    expect(unstable_doesMiddlewareMatch({ config, url: "/apple-icon" })).toBe(false);
     expect(unstable_doesMiddlewareMatch({ config, url: "/en/writing" })).toBe(true);
   });
 });
