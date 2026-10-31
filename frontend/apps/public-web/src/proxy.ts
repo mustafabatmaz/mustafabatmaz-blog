@@ -6,6 +6,7 @@ import { routing } from "./i18n/routing";
 export const proxy = createMiddleware(routing);
 
 export const config = {
-  // Not for the API, Next's own files or anything with a file extension (favicon.ico, rss.xml, images)
-  matcher: "/((?!api|_next|_vercel|.*\\..*).*)",
+  // Not for the API, Next's own files, the root icons or anything with a file extension (favicon.ico,
+  // robots.txt, sitemap.xml, images)
+  matcher: "/((?!api|_next|_vercel|icon|apple-icon|.*\\..*).*)",
 };

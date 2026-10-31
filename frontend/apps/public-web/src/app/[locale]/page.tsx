@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Chip } from "@/components/content/Chip";
 import { pillOutline, pillPrimary } from "@/components/layout/pill";
@@ -8,6 +9,24 @@ import { nowSummary } from "@/features/now/nowSummary";
 import { Link } from "@/i18n/navigation";
 import { getExperience, getLatestPosts, getPage, getProfile } from "@/lib/content";
 import { encodeEmail } from "@/lib/email";
+import { pageAlternates, pageMetadata } from "@/lib/seo";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  const [profile, t] = await Promise.all([getProfile(locale), getTranslations("site")]);
+  const name = t("name");
+  const metadata = pageMetadata({
+    locale,
+    title: name,
+    description: profile
+      ? [profile.headline, profile.intro].filter(Boolean).join(". ")
+      : t("defaultDescription"),
+    alternates: pageAlternates("/", locale),
+    siteName: name,
+  });
+  // "Mustafa Batmaz · Senior Software Developer", not the layout's "%s · Mustafa Batmaz"
+  return { ...metadata, title: { absolute: profile ? `${name} · ${profile.headline}` : name } };
+}
 
 // Server Component: all data is fetched here, on the server, in parallel; only EmailLink runs in the browser
 export default async function HomePage() {

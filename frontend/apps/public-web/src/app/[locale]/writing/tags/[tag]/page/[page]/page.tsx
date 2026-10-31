@@ -1,5 +1,13 @@
 import { getLocale } from "next-intl/server";
 import { WritingList } from "@/features/writing/WritingList";
+import { writingListMetadata } from "@/lib/pageMeta";
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/writing/tags/[tag]/page/[page]">) {
+  const { tag, page } = await params;
+  return writingListMetadata(`/writing/tags/${tag}/page/${page}`);
+}
 
 export default async function TagListPage({
   params,

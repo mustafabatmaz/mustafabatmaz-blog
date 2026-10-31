@@ -33,8 +33,9 @@ export default defineConfig([
   },
   {
     // Next requires default exports from these files (page.tsx, layout.tsx, error.tsx ...) and reads the
-    // route config they export (revalidate, generateStaticParams) next to the component
-    files: ["apps/public-web/src/app/**/*.tsx"],
+    // route config they export (revalidate, generateStaticParams) next to the component; og.tsx draws share
+    // images on the server and is never hot-reloaded in the browser
+    files: ["apps/public-web/src/app/**/*.tsx", "apps/public-web/src/lib/og.tsx"],
     rules: {
       "react-refresh/only-export-components": "off",
     },
