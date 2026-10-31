@@ -106,7 +106,7 @@ The public site is a Next.js app in `frontend/apps/public-web`. It reads the pub
 pnpm --filter @blog/public-web dev    # http://localhost:3000 (redirects to /tr or /en)
 ```
 
-Pages are rendered on their first visit and refreshed at most once a minute, so `next build` doesn't need a running backend.
+Pages are rendered on their first visit and refreshed at most once a minute, so `next build` doesn't need a running backend. Content comes from the admin panel: the profile (including education), the About and Now pages, uses and experience.
 
 ### API types
 

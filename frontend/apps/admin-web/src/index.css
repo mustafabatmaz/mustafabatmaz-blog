@@ -3,6 +3,8 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@blog/tokens/theme.css";
+/* Tailwind skips node_modules, where the workspace package is linked; scan its source directly */
+@source "../../../packages/markdown/src";
 @import "@fontsource-variable/space-grotesk";
 @import "@fontsource/space-mono/400.css";
 @import "@fontsource/space-mono/700.css";

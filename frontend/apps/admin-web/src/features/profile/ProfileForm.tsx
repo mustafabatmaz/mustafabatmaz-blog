@@ -15,6 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { tr } from "@/i18n/tr";
 import { firstLanguageWithErrors, type Language } from "@/lib/translations";
 import { fromProfile, profileSchema, toProfileRequest } from "./profileSchema";
+import { EducationField } from "./EducationField";
 import { SocialLinksField } from "./SocialLinksField";
 import { useProfile, useSaveProfile } from "./useProfile";
 
@@ -141,6 +142,10 @@ export function ProfileForm({ profile }: { profile: Schemas["ProfileAdminRespons
           register={form.register}
           errors={errors.socialLinks}
         />
+      </FormSection>
+
+      <FormSection title={tr.profile.education}>
+        <EducationField control={form.control} register={form.register} errors={errors.education} />
       </FormSection>
 
       <UnsavedChangesGuard isDirty={isDirty} />

@@ -16,6 +16,17 @@ const saved: Schemas["ProfileAdminResponse"] = {
     { platform: "GITHUB", url: "https://github.com/example" },
     { platform: "MEDIUM", url: "https://medium.com/@example" },
   ],
+  education: [
+    {
+      school: "İskenderun Teknik Üniversitesi",
+      startYear: 2012,
+      endYear: 2016,
+      translations: [
+        { lang: "tr", degree: "Bilgisayar Mühendisliği (Lisans)" },
+        { lang: "en", degree: "Computer Engineering (BSc)" },
+      ],
+    },
+  ],
   version: 3,
   updatedAt: "2026-10-27T10:00:00Z",
 };
@@ -86,6 +97,7 @@ describe("profile", () => {
         { lang: "tr", headline: "Senior Software Developer", intro: "Java ve Spring." },
       ],
       socialLinks: saved.socialLinks,
+      education: saved.education,
       version: 3,
     });
   });
@@ -137,6 +149,73 @@ describe("profile", () => {
       { platform: "GITHUB", url: "https://github.com/example" },
       { platform: "LINKEDIN", url: "https://www.linkedin.com/in/example" },
     ]);
+  });
+
+  it("shouldFillEducation_whenProfileHasIt", async () => {
+    server.use(signedIn(), profileExists());
+
+    await openProfile();
+
+    expect(await screen.findByLabelText("Okul")).toHaveValue("İskenderun Teknik Üniversitesi");
+    expect(screen.getByLabelText("Başlangıç yılı")).toHaveValue("2012");
+    expect(screen.getByLabelText("Bitiş yılı")).toHaveValue("2016");
+    expect(screen.getByLabelText("Bölüm (TR)")).toHaveValue("Bilgisayar Mühendisliği (Lisans)");
+    expect(screen.getByLabelText("Bölüm (EN)")).toHaveValue("Computer Engineering (BSc)");
+  });
+
+  it("shouldSendNewEducation_withoutBlankFields", async () => {
+    let sent: { education?: unknown } = {};
+    server.use(
+      signedIn(),
+      profileExists({ ...saved, education: [] }),
+      http.put("/api/admin/profile", async ({ request, response }) => {
+        sent = await request.json();
+        return response(200).json({ ...saved, version: 4 });
+      }),
+    );
+    const { user } = await openProfile();
+
+    await user.click(await screen.findByRole("button", { name: "Eğitim ekle" }));
+    await user.type(screen.getByLabelText("Okul"), "ODTÜ");
+    await user.selectOptions(screen.getByLabelText("Başlangıç yılı"), "2024");
+    await user.type(screen.getByLabelText("Bölüm (TR)"), "Yüksek Lisans");
+    await user.click(screen.getByRole("button", { name: "Kaydet" }));
+
+    await screen.findByText(/Kaydedildi/);
+    // Still studying: no end year; English left blank: not sent
+    expect(sent.education).toEqual([
+      { school: "ODTÜ", startYear: 2024, translations: [{ lang: "tr", degree: "Yüksek Lisans" }] },
+    ]);
+  });
+
+  it("shouldRefuseToSave_whenEndYearIsBeforeStartYear", async () => {
+    let requests = 0;
+    server.use(
+      signedIn(),
+      profileExists(),
+      http.put("/api/admin/profile", ({ response }) => {
+        requests += 1;
+        return response(200).json(saved);
+      }),
+    );
+    const { user } = await openProfile();
+
+    await user.selectOptions(await screen.findByLabelText("Bitiş yılı"), "2010");
+    await user.click(screen.getByRole("button", { name: "Kaydet" }));
+
+    expect(await screen.findByText("Bitiş yılı başlangıçtan önce olamaz.")).toBeInTheDocument();
+    expect(requests).toBe(0);
+  });
+
+  it("shouldRequireADegree_whenBothLanguagesAreBlank", async () => {
+    server.use(signedIn(), profileExists());
+    const { user } = await openProfile();
+
+    await user.clear(await screen.findByLabelText("Bölüm (TR)"));
+    await user.clear(screen.getByLabelText("Bölüm (EN)"));
+    await user.click(screen.getByRole("button", { name: "Kaydet" }));
+
+    expect(await screen.findByText("En az bir dilde bölüm adı gir.")).toBeInTheDocument();
   });
 
   it("shouldOfferReload_whenProfileChangedElsewhere", async () => {

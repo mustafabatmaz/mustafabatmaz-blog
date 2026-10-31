@@ -1,0 +1,79 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0007-profile-education
+      author: mustafabatmaz
+      comment: Education entries of the profile (school, years) and the degree name per language
+      changes:
+        - createTable:
+            tableName: profile_education
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: profile_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_profile_education_profile
+                    references: profile(id)
+                    deleteCascade: true
+              - column:
+                  name: school
+                  type: varchar(150)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: start_year
+                  type: int
+                  constraints:
+                    nullable: false
+              # Empty while still studying
+              - column:
+                  name: end_year
+                  type: int
+              - column:
+                  name: sort_order
+                  type: int
+                  constraints:
+                    nullable: false
+        - sql:
+            sql: ALTER TABLE profile_education ADD CONSTRAINT ck_profile_education_years CHECK (end_year IS NULL OR end_year >= start_year)
+        - createTable:
+            tableName: profile_education_translation
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: education_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_profile_education_translation_education
+                    references: profile_education(id)
+                    deleteCascade: true
+              - column:
+                  name: lang
+                  type: varchar(2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: degree
+                  type: varchar(150)
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: profile_education_translation
+            columnNames: education_id, lang
+            constraintName: uq_profile_education_translation_lang
+        - sql:
+            sql: ALTER TABLE profile_education_translation ADD CONSTRAINT ck_profile_education_translation_lang CHECK (lang IN ('tr', 'en'))

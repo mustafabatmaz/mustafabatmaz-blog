@@ -1,7 +1,6 @@
 {
   "site": {
-    "name": "Mustafa Batmaz",
-    "techLine": "Java 21 · Spring Boot · Next.js"
+    "name": "Mustafa Batmaz"
   },
   "nav": {
     "label": "Ana menü",
@@ -31,5 +30,58 @@
     "text": "Sayfa şu an yüklenemedi. Sorun bizde; biraz sonra tekrar denemen yeterli.",
     "retry": "Tekrar dene",
     "home": "Ana sayfa"
+  },
+  "platforms": {
+    "LINKEDIN": "LinkedIn",
+    "GITHUB": "GitHub",
+    "X": "X",
+    "MEDIUM": "Medium",
+    "STACKOVERFLOW": "Stack Overflow"
+  },
+  "home": {
+    "email": "E-posta",
+    "now": "/now",
+    "writing": "Yazılar",
+    "experience": "Deneyim",
+    "skills": "Teknolojiler"
+  },
+  "dates": {
+    "present": "şimdi"
+  },
+  "notice": {
+    "label": "not",
+    "otherLanguage": "Bu sayfa henüz Türkçe değil; {language} hâlini gösteriyoruz.",
+    "languages": {
+      "tr": "Türkçe",
+      "en": "İngilizce"
+    }
+  },
+  "about": {
+    "updated": "Son güncelleme: {date}"
+  },
+  "now": {
+    "subtitle": "Bu sayfa şu an neyle uğraştığımı anlatıyor; arada bir güncellenir.",
+    "updated": "son güncelleme · {date}"
+  },
+  "uses": {
+    "title": "Kullandıklarım",
+    "intro": "Her gün kullandığım donanım, yazılım ve araçlar.",
+    "empty": "Henüz bir şey eklenmedi.",
+    "categories": {
+      "HARDWARE": "Donanım",
+      "DEV_TOOLS": "Geliştirme araçları",
+      "SOFTWARE": "Yazılım",
+      "SERVICES": "Servisler"
+    }
+  },
+  "experience": {
+    "title": "Deneyim",
+    "intro": "Proje detayları gizlilik sınırları içinde paylaşılmıştır.",
+    "empty": "Henüz deneyim eklenmedi.",
+    "caseStudy": "Vaka analizi",
+    "education": "Eğitim",
+    "highlights": "Öne çıkanlar",
+    "back": "Deneyim",
+    "backAll": "Tüm deneyim"
   }
 }

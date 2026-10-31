@@ -13,6 +13,7 @@ import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.jspecify.annotations.Nullable;
 
 /** The site owner. There is exactly one row (id 1), enforced by a CHECK constraint. */
 @Entity
@@ -40,6 +41,10 @@ public class Profile extends AuditableEntity {
     @OrderBy("sortOrder")
     private List<SocialLink> socialLinks = new ArrayList<>();
 
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("sortOrder")
+    private List<ProfileEducation> education = new ArrayList<>();
+
     public static Profile create() {
         Profile profile = new Profile();
         profile.id = SINGLETON_ID;
@@ -58,5 +63,16 @@ public class Profile extends AuditableEntity {
 
     public void addSocialLink(SocialPlatform platform, String url) {
         socialLinks.add(new SocialLink(this, platform, url, socialLinks.size()));
+    }
+
+    public void clearEducation() {
+        education.clear();
+    }
+
+    /** Appended after the existing entries; the caller adds the degree translations to the returned entry. */
+    public ProfileEducation addEducation(String school, int startYear, @Nullable Integer endYear) {
+        ProfileEducation entry = new ProfileEducation(this, school, startYear, endYear, education.size());
+        education.add(entry);
+        return entry;
     }
 }

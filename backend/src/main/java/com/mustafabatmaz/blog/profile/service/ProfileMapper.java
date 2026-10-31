@@ -3,8 +3,13 @@ package com.mustafabatmaz.blog.profile.service;
 import com.mustafabatmaz.blog.common.Language;
 import com.mustafabatmaz.blog.common.Translations;
 import com.mustafabatmaz.blog.profile.domain.Profile;
+import com.mustafabatmaz.blog.profile.domain.ProfileEducation;
+import com.mustafabatmaz.blog.profile.domain.ProfileEducationTranslation;
 import com.mustafabatmaz.blog.profile.domain.ProfileTranslation;
 import com.mustafabatmaz.blog.profile.domain.SocialLink;
+import com.mustafabatmaz.blog.profile.web.ProfileDtos.EducationDto;
+import com.mustafabatmaz.blog.profile.web.ProfileDtos.EducationResponse;
+import com.mustafabatmaz.blog.profile.web.ProfileDtos.EducationTranslationDto;
 import com.mustafabatmaz.blog.profile.web.ProfileDtos.ProfileAdminResponse;
 import com.mustafabatmaz.blog.profile.web.ProfileDtos.ProfileResponse;
 import com.mustafabatmaz.blog.profile.web.ProfileDtos.ProfileTranslationDto;
@@ -24,6 +29,10 @@ interface ProfileMapper {
 
     List<SocialLinkDto> toDtos(List<SocialLink> links);
 
+    EducationDto toDto(ProfileEducation education);
+
+    EducationTranslationDto toDto(ProfileEducationTranslation translation);
+
     // Written by hand: picking one language is beyond a field copy
     default ProfileResponse toPublicResponse(Profile profile, Language requested) {
         ProfileTranslation translation =
@@ -35,6 +44,21 @@ interface ProfileMapper {
                 profile.getLocation(),
                 profile.getEmail(),
                 translation == null ? requested : translation.getLang(),
-                toDtos(profile.getSocialLinks()));
+                toDtos(profile.getSocialLinks()),
+                profile.getEducation().stream()
+                        .map(education -> toPublicResponse(education, requested))
+                        .toList());
+    }
+
+    private static EducationResponse toPublicResponse(ProfileEducation education, Language requested) {
+        // Every entry is saved with at least one language
+        ProfileEducationTranslation degree =
+                Translations.pick(education.getTranslations(), requested).orElseThrow();
+        return new EducationResponse(
+                education.getSchool(),
+                degree.getDegree(),
+                education.getStartYear(),
+                education.getEndYear(),
+                degree.getLang());
     }
 }

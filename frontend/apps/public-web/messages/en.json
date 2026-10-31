@@ -1,7 +1,6 @@
 {
   "site": {
-    "name": "Mustafa Batmaz",
-    "techLine": "Java 21 · Spring Boot · Next.js"
+    "name": "Mustafa Batmaz"
   },
   "nav": {
     "label": "Main menu",
@@ -31,5 +30,58 @@
     "text": "The page couldn't be loaded just now. The problem is on our side; trying again in a moment should do.",
     "retry": "Try again",
     "home": "Home"
+  },
+  "platforms": {
+    "LINKEDIN": "LinkedIn",
+    "GITHUB": "GitHub",
+    "X": "X",
+    "MEDIUM": "Medium",
+    "STACKOVERFLOW": "Stack Overflow"
+  },
+  "home": {
+    "email": "Email",
+    "now": "/now",
+    "writing": "Writing",
+    "experience": "Experience",
+    "skills": "Technologies"
+  },
+  "dates": {
+    "present": "now"
+  },
+  "notice": {
+    "label": "note",
+    "otherLanguage": "This page isn't available in English yet; showing the {language} version.",
+    "languages": {
+      "tr": "Turkish",
+      "en": "English"
+    }
+  },
+  "about": {
+    "updated": "Last updated: {date}"
+  },
+  "now": {
+    "subtitle": "What I'm focused on at the moment; updated every now and then.",
+    "updated": "last updated · {date}"
+  },
+  "uses": {
+    "title": "Uses",
+    "intro": "The hardware, software and tools I use every day.",
+    "empty": "Nothing here yet.",
+    "categories": {
+      "HARDWARE": "Hardware",
+      "DEV_TOOLS": "Development tools",
+      "SOFTWARE": "Software",
+      "SERVICES": "Services"
+    }
+  },
+  "experience": {
+    "title": "Experience",
+    "intro": "Project details are shared within confidentiality limits.",
+    "empty": "No experience added yet.",
+    "caseStudy": "Case study",
+    "education": "Education",
+    "highlights": "Highlights",
+    "back": "Experience",
+    "backAll": "All experience"
   }
 }
