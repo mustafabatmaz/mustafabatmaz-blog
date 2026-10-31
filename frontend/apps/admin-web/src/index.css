@@ -1,46 +1,17 @@
-/* Design tokens: "C · Indigo Mist" (PROJECT_DECISION.md §6). Components use these tokens only, never raw colors. */
+/* Shared Indigo Mist tokens come from @blog/tokens; this file adds the fonts and the admin-only sidebar tokens. */
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@import "@blog/tokens/theme.css";
 @import "@fontsource-variable/space-grotesk";
 @import "@fontsource/space-mono/400.css";
 @import "@fontsource/space-mono/700.css";
-
-@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --font-sans: "Space Grotesk Variable", system-ui, sans-serif;
   --font-heading: var(--font-sans);
   --font-mono: "Space Mono", ui-monospace, monospace;
 
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-soft: var(--destructive-soft);
-  --color-destructive-border: var(--destructive-border);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-mint: var(--mint);
-  --color-mint-foreground: var(--mint-foreground);
-  --color-link: var(--link);
-  --color-code: var(--code);
-  --color-code-foreground: var(--code-foreground);
-  --color-monogram: var(--monogram);
-  --color-monogram-m: var(--monogram-m);
-  --color-monogram-b: var(--monogram-b);
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -49,49 +20,9 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-
-  /* --radius is 12px: form fields use it (rounded-lg), cards use rounded-2xl (~22px), buttons and tags are pills */
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
 :root {
-  --radius: 0.75rem;
-
-  --background: #f6f6fa;
-  --foreground: #191b33;
-  --card: #ffffff;
-  --card-foreground: #191b33;
-  --popover: #ffffff;
-  --popover-foreground: #191b33;
-  --primary: #4c56b8;
-  --primary-foreground: #ffffff;
-  --secondary: #e1e4f8;
-  --secondary-foreground: #3a429a;
-  --muted: #edeef5;
-  --muted-foreground: #5a5e7a;
-  --accent: #e1e4f8;
-  --accent-foreground: #3a429a;
-  --destructive: #a32a22;
-  --destructive-soft: #fbe9e8;
-  --destructive-border: #e7b4af;
-  --border: #e2e3ee;
-  --input: #c9cbdd;
-  --ring: #4c56b8;
-  --mint: #d6eeeb;
-  --mint-foreground: #22625d;
-  --link: #4c56b8;
-  --code: #191b33;
-  --code-foreground: #e7e8f3;
-  --monogram: #e1e4f8;
-  --monogram-m: #191b33;
-  --monogram-b: #4c56b8;
-
   --sidebar: #ffffff;
   --sidebar-foreground: #191b33;
   --sidebar-primary: #4c56b8;
@@ -103,35 +34,6 @@
 }
 
 .dark {
-  --background: #12131f;
-  --foreground: #e7e8f3;
-  --card: #1a1c2c;
-  --card-foreground: #e7e8f3;
-  --popover: #1a1c2c;
-  --popover-foreground: #e7e8f3;
-  --primary: #5b66cc;
-  --primary-foreground: #ffffff;
-  --secondary: #22254a;
-  --secondary-foreground: #b7bef5;
-  --muted: #22243a;
-  --muted-foreground: #9a9db8;
-  --accent: #22254a;
-  --accent-foreground: #b7bef5;
-  --destructive: #f2b8b5;
-  --destructive-soft: #3a1e22;
-  --destructive-border: #6b3a3e;
-  --border: #2a2c42;
-  --input: #3a3d5a;
-  --ring: #a3acf0;
-  --mint: #173533;
-  --mint-foreground: #9ed8d1;
-  --link: #a3acf0;
-  --code: #1a1c2c;
-  --code-foreground: #e7e8f3;
-  --monogram: #22254a;
-  --monogram-m: #ffffff;
-  --monogram-b: #a3acf0;
-
   --sidebar: #1a1c2c;
   --sidebar-foreground: #e7e8f3;
   --sidebar-primary: #5b66cc;

@@ -1,0 +1,35 @@
+{
+  "site": {
+    "name": "Mustafa Batmaz",
+    "techLine": "Java 21 · Spring Boot · Next.js"
+  },
+  "nav": {
+    "label": "Main menu",
+    "home": "Home",
+    "writing": "Writing",
+    "experience": "Experience",
+    "about": "About",
+    "now": "Now",
+    "uses": "Uses"
+  },
+  "language": {
+    "label": "Language",
+    "tr": "Türkçe",
+    "en": "English"
+  },
+  "theme": {
+    "toggle": "Toggle theme"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "text": "The page you're looking for never existed or has moved. You can carry on from here:",
+    "home": "Home",
+    "writing": "Writing"
+  },
+  "error": {
+    "title": "Something went wrong",
+    "text": "The page couldn't be loaded just now. The problem is on our side; trying again in a moment should do.",
+    "retry": "Try again",
+    "home": "Home"
+  }
+}
