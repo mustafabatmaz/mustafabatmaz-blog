@@ -1,7 +1,7 @@
 import type { Schemas } from "@blog/api-client";
 import { z } from "zod";
 import { tr } from "@/i18n/tr";
-import { isSlug } from "@/lib/slug";
+import { isSlug } from "@blog/slug";
 import { fromTranslations, toTranslations, translationsSchema } from "@/lib/translations";
 import {
   fromLocalInput,
@@ -16,6 +16,10 @@ export type PostSummary = Schemas["PostAdminSummary"];
 
 // Same limits as the backend's PostAdminRequest
 export const MAX_TAGS = 10;
+
+// The public site lists posts at /writing/page/2 and /writing/tags/kafka; a post with one of these slugs
+// would never be reachable (5c decision 7)
+const RESERVED_SLUGS = ["page", "tags"];
 
 const emptyTranslation = { title: "", slug: "", summary: "", bodyMd: "" };
 
@@ -34,7 +38,8 @@ export function createPostSchema(now: () => Date = () => new Date()) {
             .string()
             .trim()
             .max(150, tr.form.tooLong(150))
-            .refine((value) => value === "" || isSlug(value), tr.posts.slugFormat),
+            .refine((value) => value === "" || isSlug(value), tr.posts.slugFormat)
+            .refine((value) => !RESERVED_SLUGS.includes(value), tr.posts.slugReserved),
           summary: z.string().max(500, tr.form.tooLong(500)),
           bodyMd: z.string().max(200_000, tr.form.tooLong(200_000)),
         },

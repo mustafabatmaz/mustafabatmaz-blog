@@ -15,6 +15,12 @@ describe("slugify", () => {
     expect(slugify("C++ & Java/Kotlin")).toBe("c-java-kotlin");
   });
 
+  it("shouldDropApostrophes_soSuffixesStayWithTheirWord", () => {
+    expect(slugify("Kafka'da kaybolan event'ler")).toBe("kafkada-kaybolan-eventler");
+    expect(slugify("Spring’in yeni sürümü")).toBe("springin-yeni-surumu");
+    expect(slugify("Don\u02BCt panic")).toBe("dont-panic");
+  });
+
   it("shouldDropOtherAccents", () => {
     expect(slugify("Café Déjà Vu")).toBe("cafe-deja-vu");
   });

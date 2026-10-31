@@ -15,6 +15,7 @@
     "@base-ui/react": "^1.9.0",
     "@blog/api-client": "workspace:*",
     "@blog/markdown": "workspace:*",
+    "@blog/slug": "workspace:*",
     "@blog/tokens": "workspace:*",
     "@codemirror/commands": "^6.11.1",
     "@codemirror/lang-markdown": "^6.5.2",

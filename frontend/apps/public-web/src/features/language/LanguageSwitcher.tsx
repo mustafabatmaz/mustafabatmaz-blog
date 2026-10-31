@@ -4,9 +4,10 @@ import { useLocale } from "next-intl";
 import { Fragment } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
+import { switchTarget } from "./switchTarget";
 
 // Client Component: the current address is only known in the browser's router. Opens the same page in the
-// other language; a post's other-language slug comes later with the posts (5c).
+// other language; from a post, the other language's list (switchTarget).
 export function LanguageSwitcher({
   label,
   names,
@@ -31,7 +32,7 @@ export function LanguageSwitcher({
             </span>
           ) : (
             <Link
-              href={pathname}
+              href={switchTarget(pathname)}
               locale={locale}
               hrefLang={locale}
               lang={locale}

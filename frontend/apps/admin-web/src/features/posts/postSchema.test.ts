@@ -98,6 +98,15 @@ describe("post form", () => {
     ]);
   });
 
+  it("shouldRejectSlugs_thatThePublicSiteUsesForItsListPages", () => {
+    const form = fromPost(saved);
+    form.translations.tr.slug = "page";
+
+    expect(issues(form)).toEqual([
+      ["translations.tr.slug", expect.stringContaining("ayrılmış") as string],
+    ]);
+  });
+
   it("shouldRequireFutureMoment_whenScheduling", () => {
     const form = { ...fromPost(saved), mode: "scheduled" as const };
 

@@ -83,5 +83,29 @@
     "highlights": "Öne çıkanlar",
     "back": "Deneyim",
     "backAll": "Tüm deneyim"
+  },
+  "writing": {
+    "title": "Yazılar",
+    "intro": "Backend, hata ayıklama ve öğrendiklerim üzerine az ama öz yazılar.",
+    "tags": "Etiketler",
+    "all": "Tümü",
+    "filtered": "\"{tag}\" etiketli {count} yazı",
+    "clearFilter": "filtreyi kaldır",
+    "empty": "Bu dilde henüz yazı yok.",
+    "otherLanguageList": "İngilizce yazılara bak",
+    "minutes": "{count} dk",
+    "pages": "Sayfalar",
+    "page": "Sayfa {page} / {total}",
+    "previousPage": "← Önceki",
+    "nextPage": "Sonraki →",
+    "back": "Tüm yazılar",
+    "contents": "İçindekiler",
+    "otherPosts": "Diğer yazılar",
+    "previous": "← önceki",
+    "next": "sonraki →",
+    "readIn": {
+      "tr": "Türkçe oku",
+      "en": "Read in English"
+    }
   }
 }

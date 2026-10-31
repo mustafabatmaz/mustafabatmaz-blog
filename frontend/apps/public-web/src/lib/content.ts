@@ -36,6 +36,25 @@ export function getCaseStudy(slug: string, lang: Locale) {
   );
 }
 
+// One page of posts in this language, optionally with one tag; null if the API says the page doesn't exist
+export function getPosts(lang: Locale, page: number, tag?: string) {
+  return dataOrNull(
+    api.GET("/api/public/posts", { params: { query: { lang, page, ...(tag ? { tag } : {}) } } }),
+  );
+}
+
+// null: no published post with this slug in this language (posts don't fall back to the other one)
+export function getPost(slug: string, lang: Locale) {
+  return dataOrNull(
+    api.GET("/api/public/posts/{slug}", { params: { path: { slug }, query: { lang } } }),
+  );
+}
+
+// The tags of the posts published in this language, with how many each
+export async function getTags(lang: Locale) {
+  return (await dataOrNull(api.GET("/api/public/tags", { params: { query: { lang } } }))) ?? [];
+}
+
 // Posts don't fall back to the other language, so these are the newest ones written in this one
 export async function getLatestPosts(lang: Locale, count = 3) {
   const page = await dataOrNull(

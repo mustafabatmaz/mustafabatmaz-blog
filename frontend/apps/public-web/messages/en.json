@@ -83,5 +83,29 @@
     "highlights": "Highlights",
     "back": "Experience",
     "backAll": "All experience"
+  },
+  "writing": {
+    "title": "Writing",
+    "intro": "A few focused posts on backend work, debugging and what I've learned.",
+    "tags": "Tags",
+    "all": "All",
+    "filtered": "{count} posts tagged \"{tag}\"",
+    "clearFilter": "clear filter",
+    "empty": "No posts in this language yet.",
+    "otherLanguageList": "See the Turkish posts",
+    "minutes": "{count} min",
+    "pages": "Pages",
+    "page": "Page {page} of {total}",
+    "previousPage": "← Previous",
+    "nextPage": "Next →",
+    "back": "All posts",
+    "contents": "Contents",
+    "otherPosts": "Other posts",
+    "previous": "← previous",
+    "next": "next →",
+    "readIn": {
+      "tr": "Türkçe oku",
+      "en": "Read in English"
+    }
   }
 }

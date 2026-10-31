@@ -1,7 +1,7 @@
 import type { Schemas } from "@blog/api-client";
 import { z } from "zod";
 import { tr } from "@/i18n/tr";
-import { isSlug } from "@/lib/slug";
+import { isSlug } from "@blog/slug";
 import { fromTranslations, toTranslations, translationsSchema } from "@/lib/translations";
 import type { Project } from "./experienceSchema";
 
