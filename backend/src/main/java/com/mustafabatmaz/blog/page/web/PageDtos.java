@@ -29,7 +29,7 @@ public final class PageDtos {
             Instant updatedAt) {}
 
     public record PageAdminRequest(
-            @NotEmpty @Valid List<PageTranslationDto> translations,
+            @NotEmpty List<@Valid PageTranslationDto> translations,
             @Nullable Long version) {}
 
     public record PageAdminResponse(

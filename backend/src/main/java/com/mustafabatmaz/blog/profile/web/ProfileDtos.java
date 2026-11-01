@@ -45,9 +45,9 @@ public final class ProfileDtos {
             @NotBlank @Size(max = 100) String fullName,
             @Email @Size(max = 254) @Nullable String email,
             @Size(max = 100) @Nullable String location,
-            @NotEmpty @Valid List<ProfileTranslationDto> translations,
-            @NotNull @Size(max = 20) @Valid List<SocialLinkDto> socialLinks,
-            @NotNull @Size(max = 10) @Valid List<EducationDto> education,
+            @NotEmpty List<@Valid ProfileTranslationDto> translations,
+            @NotNull @Size(max = 20) List<@Valid SocialLinkDto> socialLinks,
+            @NotNull @Size(max = 10) List<@Valid EducationDto> education,
             @Nullable Long version) {}
 
     public record ProfileAdminResponse(
@@ -76,7 +76,7 @@ public final class ProfileDtos {
             @NotBlank @Size(max = 150) String school,
             @NotNull @Min(1950) @Max(2100) Integer startYear,
             @Min(1950) @Max(2100) @Nullable Integer endYear,
-            @NotEmpty @Valid List<EducationTranslationDto> translations) {}
+            @NotEmpty List<@Valid EducationTranslationDto> translations) {}
 
     public record EducationTranslationDto(
             @NotNull Language lang,

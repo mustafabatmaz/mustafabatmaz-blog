@@ -6,7 +6,6 @@ import { ogContentType, ogLocale } from "@/lib/ogPages";
 export const size = ogSize;
 export const contentType = ogContentType;
 export const alt = "Mustafa Batmaz";
-export const revalidate = 3600;
 
 export default async function Image({
   params,

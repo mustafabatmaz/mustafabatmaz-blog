@@ -72,7 +72,7 @@ public final class PostDtos {
             @NotNull PostStatus status,
             @Nullable Instant publishedAt,
             @Nullable Long coverMediaId,
-            @NotEmpty @Valid List<PostTranslationDto> translations,
+            @NotEmpty List<@Valid PostTranslationDto> translations,
             @NotNull @Size(max = 10) List<@NotBlank @Size(max = 50) String> tags,
             @Nullable Long version) {}
 

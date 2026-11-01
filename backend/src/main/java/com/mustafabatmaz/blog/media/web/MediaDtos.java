@@ -36,7 +36,7 @@ public final class MediaDtos {
 
     /** An empty list removes all alt texts. */
     public record MediaAdminRequest(
-            @NotNull @Valid List<MediaTranslationDto> translations,
+            @NotNull List<@Valid MediaTranslationDto> translations,
             @Nullable Long version) {}
 
     public record MediaTranslationDto(

@@ -62,7 +62,7 @@ public final class ExperienceDtos {
             @NotBlank @Size(max = 100) String company,
             @NotNull YearMonth startMonth,
             @Nullable YearMonth endMonth,
-            @NotEmpty @Valid List<ExperienceTranslationDto> translations,
+            @NotEmpty List<@Valid ExperienceTranslationDto> translations,
             @Nullable Long version) {}
 
     public record ExperienceAdminResponse(
@@ -86,7 +86,7 @@ public final class ExperienceDtos {
             @NotBlank @Size(max = 100) @Pattern(regexp = SLUG)
             String slug,
 
-            @NotEmpty @Valid List<ProjectTranslationDto> translations,
+            @NotEmpty List<@Valid ProjectTranslationDto> translations,
             @NotNull @Size(max = 30) List<@NotBlank @Size(max = 50) String> technologies,
             @Nullable Long version) {}
 

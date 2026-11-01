@@ -6,8 +6,6 @@ import { ogContentType, ogLocale } from "@/lib/ogPages";
 export const size = ogSize;
 export const contentType = ogContentType;
 export const alt = "Mustafa Batmaz";
-// Titles rarely change, and networks keep the image long after they first fetch it
-export const revalidate = 3600;
 
 export default async function Image({
   params,
