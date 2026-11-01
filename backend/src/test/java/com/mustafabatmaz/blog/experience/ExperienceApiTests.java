@@ -76,6 +76,15 @@ class ExperienceApiTests extends IntegrationTest {
     }
 
     @Test
+    void shouldListEachProjectTranslationOnce_whenTheProjectHasSeveralTechnologies() throws Exception {
+        long company = createExperience("NEG Teknoloji", "2025-06", null);
+        createProject(company, "turkpatent", "TÜRKPATENT", null, "Java", "Kafka", "Liquibase");
+
+        mockMvc.perform(asAdmin(get(ADMIN)))
+                .andExpect(jsonPath("$[0].projects[0].translations[*].lang", contains("tr")));
+    }
+
+    @Test
     void shouldReuseTechnology_whenNameDiffersOnlyInCase() throws Exception {
         long company = createExperience("NEG Teknoloji", "2025-06", null);
         createProject(company, "turkpatent", "TÜRKPATENT", null, "Kafka");

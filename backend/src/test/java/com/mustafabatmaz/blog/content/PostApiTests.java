@@ -312,6 +312,21 @@ class PostApiTests extends IntegrationTest {
     }
 
     @Test
+    void shouldListEachTranslationOnce_whenThePostHasSeveralTags() throws Exception {
+        create(postJson(
+                "DRAFT",
+                null,
+                null,
+                "[" + tr("etiketli", "Etiketli") + "," + en("tagged", "Tagged") + "]",
+                null,
+                "Java",
+                "Docker"));
+
+        mockMvc.perform(asAdmin(get(ADMIN)))
+                .andExpect(jsonPath("$.items[0].translations[*].lang", containsInAnyOrder("tr", "en")));
+    }
+
+    @Test
     void shouldDeletePost() throws Exception {
         long id = id(create(
                 postJson("PUBLISHED", daysAgo(1), null, "[" + tr("silinecek", "Silinecek") + "]", null, "Kafka")));

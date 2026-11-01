@@ -11,13 +11,15 @@ import org.springframework.data.repository.query.Param;
 
 public interface ExperienceProjectRepository extends JpaRepository<ExperienceProject, Long> {
 
-    @EntityGraph(attributePaths = {"translations", "technologies"})
+    // Technologies are not in the graph: joined with the translations they would repeat each translation
+    // once per technology. They come in one batched query instead (@BatchSize on the entity).
+    @EntityGraph(attributePaths = "translations")
     List<ExperienceProject> findAllByExperience_IdInOrderBySortOrderAsc(Collection<Long> experienceIds);
 
-    @EntityGraph(attributePaths = {"translations", "technologies"})
+    @EntityGraph(attributePaths = "translations")
     List<ExperienceProject> findAllByExperience_IdOrderBySortOrderAsc(Long experienceId);
 
-    @EntityGraph(attributePaths = {"translations", "technologies", "experience"})
+    @EntityGraph(attributePaths = {"translations", "experience"})
     Optional<ExperienceProject> findBySlug(String slug);
 
     boolean existsBySlug(String slug);

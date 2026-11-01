@@ -1,6 +1,7 @@
 # Private project files (never push)
 CLAUDE.md
 PROJECT_DECISION.md
+site-icerik.md
 .claude/
 
 # Secrets
