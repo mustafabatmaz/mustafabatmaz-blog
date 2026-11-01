@@ -59,7 +59,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("select p.id from Post p where p.status = :status")
     Page<Long> findIdsByStatus(@Param("status") PostStatus status, Pageable pageable);
 
-    @EntityGraph(attributePaths = {"translations", "tags"})
+    // Tags are not in the graph: joined with the translations they would repeat each translation once per
+    // tag. They come in one batched query instead (@BatchSize on the entity).
+    @EntityGraph(attributePaths = "translations")
     List<Post> findAllByIdIn(Collection<Long> ids);
 
     @Query("select new com.mustafabatmaz.blog.content.repository.TagCount(tg.name, tg.slug, count(distinct p.id))"

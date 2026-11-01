@@ -22,6 +22,7 @@ import java.util.Set;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 
 @Entity
 @Table(name = "experience_project")
@@ -47,8 +48,9 @@ public class ExperienceProject extends AuditableEntity {
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ExperienceProjectTranslation> translations = new ArrayList<>();
 
-    // A Set, not a List: Hibernate can't fetch two Lists (bags) in one query
+    // Not fetched together with the translations (rows would multiply); loaded for many projects in one query
     @ManyToMany
+    @BatchSize(size = 50)
     @JoinTable(
             name = "experience_project_technology",
             joinColumns = @JoinColumn(name = "project_id"),

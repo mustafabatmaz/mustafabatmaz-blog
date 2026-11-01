@@ -23,6 +23,7 @@ import java.util.Set;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 
 @Entity
 @Table(name = "post")
@@ -51,8 +52,9 @@ public class Post extends AuditableEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostTranslation> translations = new ArrayList<>();
 
-    // A Set, not a List: Hibernate can't fetch two Lists (bags) in one query
+    // Not fetched together with the translations (rows would multiply); loaded for many posts in one query
     @ManyToMany
+    @BatchSize(size = 50)
     @JoinTable(
             name = "post_tag",
             joinColumns = @JoinColumn(name = "post_id"),
