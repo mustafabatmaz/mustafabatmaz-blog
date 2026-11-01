@@ -2,7 +2,7 @@
 
 My personal website: a short introduction, my work experience and a small collection of technical writing. Available in Turkish and English.
 
-> **Status:** work in progress. The project is being built in phases; see the roadmap below.
+> **Status:** live at [mustafabatmaz.com](https://mustafabatmaz.com). Built in phases; see the roadmap below.
 
 ## Stack
 
@@ -44,6 +44,7 @@ infra/       Docker Compose and nginx configuration
 - [x] Phase 4: admin panel
 - [x] Phase 5: public website
 - [x] Phase 6: full Docker stack and setup guide
+- [x] Phase 7: deployment (own server, HTTPS with Caddy, nightly encrypted backups)
 
 ## Getting started
 
