@@ -14,8 +14,14 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @ConfigurationProperties(prefix = "blog.auth")
 public record AuthProperties(
-        @NotBlank String adminUsername,
-        @NotBlank String adminPasswordHash,
-        @NotBlank String jwtSecret,
+        @NotBlank(message = "ADMIN_USERNAME is not set (infra/.env)")
+        String adminUsername,
+
+        @NotBlank(message = "ADMIN_PASSWORD_HASH is not set (infra/.env)")
+        String adminPasswordHash,
+
+        @NotBlank(message = "JWT_SECRET is not set (infra/.env)")
+        String jwtSecret,
+
         @NotNull Duration jwtTtl,
         boolean cookieSecure) {}
