@@ -248,6 +248,26 @@ describe("media editor", () => {
     return within(within(dialog).getByRole("tabpanel")).getByLabelText("Alt metin");
   }
 
+  it("shouldShowTheImageSize_whenTheBackendKnowsIt", async () => {
+    server.use(
+      signedIn(),
+      mediaExist([
+        media(1, "kafka-consumer-lag.png", { width: 1600, height: 900 }),
+        media(2, "postgres-explain.png"),
+      ]),
+    );
+    const { dialog } = await openEditor("kafka-consumer-lag.png");
+
+    expect(within(dialog).getByText("1600 × 900 px")).toBeInTheDocument();
+  });
+
+  it("shouldLeaveTheSizeOut_whenItIsUnknown", async () => {
+    server.use(signedIn(), mediaExist([media(2, "postgres-explain.png")]));
+    const { dialog } = await openEditor("postgres-explain.png");
+
+    expect(within(dialog).queryByText("Ölçüler")).not.toBeInTheDocument();
+  });
+
   it("shouldSaveAltTextWithLoadedVersion_whenEditorIsSaved", async () => {
     let sent: unknown;
     server.use(

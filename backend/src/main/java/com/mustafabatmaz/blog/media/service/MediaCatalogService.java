@@ -44,6 +44,11 @@ class MediaCatalogService implements MediaCatalog {
         for (MediaTranslation translation : media.getTranslations()) {
             altTexts.put(translation.getLang(), translation.getAltText());
         }
-        return new MediaReference(media.getId(), MediaMapper.PUBLIC_PATH + media.getStorageKey(), altTexts);
+        return new MediaReference(
+                media.getId(),
+                MediaMapper.PUBLIC_PATH + media.getStorageKey(),
+                altTexts,
+                media.getWidth(),
+                media.getHeight());
     }
 }

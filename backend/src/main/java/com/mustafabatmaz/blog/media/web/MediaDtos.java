@@ -29,6 +29,8 @@ public final class MediaDtos {
             long sizeBytes,
             @Nullable String originalFilename,
             boolean metadataStripped,
+            @Nullable Integer width,
+            @Nullable Integer height,
             List<MediaTranslationDto> translations,
             long version,
             Instant createdAt,

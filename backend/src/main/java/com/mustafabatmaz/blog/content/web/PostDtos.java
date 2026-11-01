@@ -22,8 +22,15 @@ public final class PostDtos {
 
     public record TagResponse(String name, String slug) {}
 
-    /** @param alt empty when the image has no alt text (treated as decorative) */
-    public record CoverResponse(String url, String alt) {}
+    /**
+     * @param alt empty when the image has no alt text (treated as decorative)
+     * @param width as shown, when known: the page keeps the cover's room before it loads (likewise height)
+     */
+    public record CoverResponse(
+            String url,
+            String alt,
+            @Nullable Integer width,
+            @Nullable Integer height) {}
 
     public record PostSummaryResponse(
             String slug,

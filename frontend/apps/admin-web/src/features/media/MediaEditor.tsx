@@ -135,6 +135,14 @@ export function MediaEditor({ item, onClose }: MediaEditorProps) {
                 <dd className="font-mono text-[13px]">
                   {item.format} · {formatBytes(item.sizeBytes)}
                 </dd>
+                {item.width != null && item.height != null && (
+                  <>
+                    <dt className="text-muted-foreground">{tr.media.dimensions}</dt>
+                    <dd className="font-mono text-[13px]">
+                      {tr.media.dimensionsValue(item.width, item.height)}
+                    </dd>
+                  </>
+                )}
                 {item.createdAt && (
                   <>
                     <dt className="text-muted-foreground">{tr.media.uploadedAt}</dt>

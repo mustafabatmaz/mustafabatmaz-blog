@@ -274,7 +274,10 @@ class PostApiTests extends IntegrationTest {
 
         mockMvc.perform(get(PUBLIC + "/kapakli"))
                 .andExpect(jsonPath("$.cover.url", notNullValue()))
-                .andExpect(jsonPath("$.cover.alt").value("Kapak görseli"));
+                .andExpect(jsonPath("$.cover.alt").value("Kapak görseli"))
+                // The test PNG is 1 × 1; the page reserves the cover's room before it loads
+                .andExpect(jsonPath("$.cover.width").value(1))
+                .andExpect(jsonPath("$.cover.height").value(1));
     }
 
     @Test

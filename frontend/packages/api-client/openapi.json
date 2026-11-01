@@ -2181,6 +2181,20 @@
           "metadataStripped": {
             "type": "boolean"
           },
+          "width": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int32"
+          },
+          "height": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int32"
+          },
           "translations": {
             "type": "array",
             "items": {
@@ -2538,6 +2552,20 @@
           },
           "alt": {
             "type": "string"
+          },
+          "width": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int32"
+          },
+          "height": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int32"
           }
         },
         "required": [

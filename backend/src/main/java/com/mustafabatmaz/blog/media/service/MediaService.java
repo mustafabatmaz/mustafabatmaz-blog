@@ -7,6 +7,7 @@ import com.mustafabatmaz.blog.common.NotFoundException;
 import com.mustafabatmaz.blog.common.ProblemTypes;
 import com.mustafabatmaz.blog.common.Translations;
 import com.mustafabatmaz.blog.media.config.MediaProperties;
+import com.mustafabatmaz.blog.media.domain.ImageDimensions;
 import com.mustafabatmaz.blog.media.domain.ImageFormat;
 import com.mustafabatmaz.blog.media.domain.Media;
 import com.mustafabatmaz.blog.media.domain.MediaTranslation;
@@ -35,6 +36,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @RequiredArgsConstructor
 public class MediaService {
+
+    private static final String IMAGE_NOT_FOUND = "Image not found";
 
     private final MediaRepository repository;
     private final MediaStorage storage;
@@ -69,6 +72,10 @@ public class MediaService {
 
         Media media = new Media(
                 key, format, cleaned.data().length, fileNameOnly(file.getOriginalFilename()), cleaned.stripped());
+        // Read from the cleaned file, the one that is served; unknown only costs the page its reserved room
+        ImageDimensions.read(format, cleaned.data())
+                .ifPresentOrElse(
+                        media::setDimensions, () -> log.warn("Could not read the size of upload {} ({})", key, format));
         applyAltTexts(media, altTextsFromForm(altTr, altEn));
         media.touch(clock.instant());
         return mapper.toAdminResponse(repository.saveAndFlush(media));
@@ -113,11 +120,10 @@ public class MediaService {
 
     @Transactional(readOnly = true)
     public StoredFile find(String storageKey) {
-        Media media =
-                repository.findByStorageKey(storageKey).orElseThrow(() -> new NotFoundException("Image not found"));
+        Media media = repository.findByStorageKey(storageKey).orElseThrow(() -> new NotFoundException(IMAGE_NOT_FOUND));
         Path path = storage.find(storageKey).orElseThrow(() -> {
             log.warn("Media row {} has no file on disk", media.getId());
-            return new NotFoundException("Image not found");
+            return new NotFoundException(IMAGE_NOT_FOUND);
         });
         return new StoredFile(path, media.getFormat(), media.getSizeBytes());
     }
@@ -178,6 +184,6 @@ public class MediaService {
     }
 
     private Media load(long id) {
-        return repository.findById(id).orElseThrow(() -> new NotFoundException("Image not found"));
+        return repository.findById(id).orElseThrow(() -> new NotFoundException(IMAGE_NOT_FOUND));
     }
 }

@@ -341,6 +341,8 @@ export const tr = {
     previewOf: (name: string) => `${name} önizlemesi`,
     file: "Dosya",
     typeAndSize: "Tür · boyut",
+    dimensions: "Ölçüler",
+    dimensionsValue: (width: number, height: number) => `${String(width)} × ${String(height)} px`,
     uploadedAt: "Yüklendi",
     metadata: "Metadata",
     metadataStripped: "✓ Konum ve kamera bilgisi silindi",
