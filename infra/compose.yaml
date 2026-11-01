@@ -34,6 +34,9 @@ services:
       COOKIE_SECURE: ${COOKIE_SECURE:-true}
       API_DOCS_ENABLED: ${API_DOCS_ENABLED:-false}
       MEDIA_DIR: /var/lib/blog/media
+      # After an admin change public-web is told to rebuild its pages (6a)
+      PUBLIC_WEB_URL: http://public-web:3000
+      REVALIDATE_SECRET: ${REVALIDATE_SECRET:-}
     volumes:
       - media:/var/lib/blog/media
     ports:
@@ -80,6 +83,8 @@ services:
       # Read at run time: the pages' API calls, and the address in OG images, canonical links, sitemap and RSS
       API_BASE_URL: http://backend:8080
       SITE_URL: ${SITE_URL}
+      # Checked on POST /api/revalidate, which the backend calls
+      REVALIDATE_SECRET: ${REVALIDATE_SECRET:-}
     ports:
       - "127.0.0.1:3000:3000"
     depends_on:
