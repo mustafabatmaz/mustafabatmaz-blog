@@ -35,7 +35,7 @@ public final class UsesDtos {
             @Size(max = 500) @Pattern(regexp = HTTP_URL) @Nullable
             String url,
 
-            @NotEmpty @Valid List<UsesItemTranslationDto> translations,
+            @NotEmpty List<@Valid UsesItemTranslationDto> translations,
             @Nullable Long version) {}
 
     public record UsesItemAdminResponse(

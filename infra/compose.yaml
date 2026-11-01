@@ -8,7 +8,8 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
-      - "5432:5432"
+      # This machine only (DataGrip, a backend run from the IDE); the other services reach it over the network
+      - "127.0.0.1:5432:5432"
     volumes:
       # Postgres 18 images keep data under /var/lib/postgresql/<version>
       - pgdata:/var/lib/postgresql

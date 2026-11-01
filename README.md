@@ -43,45 +43,111 @@ infra/       Docker Compose and nginx configuration
 - [x] Phase 3: content modules and API
 - [x] Phase 4: admin panel
 - [x] Phase 5: public website
-- [ ] Phase 6: full Docker stack and setup guide
+- [x] Phase 6: full Docker stack and setup guide
 
 ## Getting started
 
-Requirements: Docker. For running the backend outside Docker: Java 21.
+Everything runs in Docker: PostgreSQL, the API, the public website and the admin panel. Nothing else needs to be installed to use the site.
+
+### 1. Requirements
+
+- Docker with Compose v2 (Docker Desktop on macOS/Windows)
+- git and openssl (both come with macOS and most Linux distributions)
+
+For working on the code outside Docker, see [Development](#development).
+
+### 2. Get the code
 
 ```bash
-cp infra/.env.example infra/.env    # then edit the values
-docker compose -f infra/compose.yaml up --build
+git clone https://github.com/mustafabatmaz/mustafabatmaz-blog.git
+cd mustafabatmaz-blog
+cp infra/.env.example infra/.env
 ```
 
-This starts PostgreSQL, the API, the public website and the admin panel:
+### 3. Fill in `infra/.env`
 
-- Public website: http://localhost:3000 (`SITE_URL` in `infra/.env` is the address used in share images, canonical links, the sitemap and RSS)
-- Admin panel: http://localhost:8081 (nginx serves the app and passes `/api` to the backend)
-- API: http://localhost:8080, reachable from this machine only. Health check: http://localhost:8080/actuator/health
+`infra/.env` holds every setting and secret; it is gitignored. Open it and set:
 
-### Admin credentials
+| Variable | What to put there |
+|---|---|
+| `DB_PASSWORD` | Any password for the database (PostgreSQL is reachable from this machine only) |
+| `ADMIN_USERNAME` | The admin panel's user name |
+| `ADMIN_PASSWORD_HASH` | A BCrypt hash of the admin password, inside single quotes (below) |
+| `JWT_SECRET` | A random secret for login tokens (below) |
+| `REVALIDATE_SECRET` | A random secret shared by the API and the public site; with it, admin changes show up on the site right away. Empty works too: the site then catches up within a minute |
+| `SITE_URL` | The public site's address, used in share images, canonical links, the sitemap and RSS. `http://localhost:3000` locally |
 
-The admin password is stored only as a BCrypt hash in `infra/.env`. To create one (you are prompted for the password, so it never lands in your shell history):
+Create the password hash (you are asked for the password, so it never ends up in your shell history), and copy the output without the leading `:`:
 
 ```bash
 docker run --rm -it httpd:2.4-alpine htpasswd -nBC 12 ""
 ```
 
-Copy the output without the leading `:` into `ADMIN_PASSWORD_HASH`, inside single quotes. Generate the token secret with:
+Generate each secret with:
 
 ```bash
 openssl rand -base64 32
 ```
 
-Run the backend tests (Testcontainers needs Docker running):
+`COOKIE_SECURE=false` and `API_DOCS_ENABLED=true` suit local use over plain http; anywhere served over https, set `COOKIE_SECURE=true` and leave the API docs off.
+
+### 4. Start
+
+```bash
+docker compose -f infra/compose.yaml up --build -d
+```
+
+The first build takes a few minutes. When `docker compose -f infra/compose.yaml ps` shows all four services as `healthy`:
+
+- Public website: http://localhost:3000 (redirects to `/tr` or `/en`)
+- Admin panel: http://localhost:8081 (nginx serves the app and passes `/api` to the backend)
+- API: http://localhost:8080, reachable from this machine only. Health check: http://localhost:8080/actuator/health
+
+All ports are bound to `127.0.0.1`, so nothing is reachable from other machines.
+
+### 5. First sign-in and first content
+
+The site starts empty. Sign in to the admin panel with the user name and password from step 3, then:
+
+1. **Profile:** name, title, a short introduction, e-mail and social links. These fill the home page and the footer.
+2. **Pages:** About and Now.
+3. **Experience** and **Uses**.
+4. **Media:** upload images (JPEG, PNG, WebP or AVIF, up to 5 MB) to use as post covers or in posts.
+5. **Posts:** write in Markdown, then publish now or schedule for later.
+
+Each language (Turkish, English) is optional per item; a post appears on the site only in the languages it has. Until the About or Now page is saved, its address on the site answers "not found".
+
+### 6. Stop and start again
+
+```bash
+docker compose -f infra/compose.yaml stop     # stop; everything stays
+docker compose -f infra/compose.yaml up -d    # start again
+```
+
+Content lives in two Docker volumes: the database (`pgdata`) and uploaded images (`media`). `docker compose -f infra/compose.yaml down` removes the containers and keeps both; `down -v` **deletes all content**.
+
+## Development
+
+### Backend
+
+Requirements: Java 21 (the Maven wrapper is included). Run the backend from the IDE or the command line with PostgreSQL in Docker:
+
+```bash
+docker compose -f infra/compose.yaml stop backend      # free port 8080
+docker compose -f infra/compose.yaml up -d postgres
+cd backend
+set -a; . ../infra/.env; set +a                         # the same settings as Docker
+./mvnw spring-boot:run
+```
+
+In IntelliJ, point the run configuration's environment variables at `infra/.env`. Tests (Testcontainers needs Docker running):
 
 ```bash
 cd backend
 ./mvnw verify
 ```
 
-### Admin panel (development)
+### Admin panel
 
 Requirements: Node 24 and pnpm (the version is pinned in `frontend/package.json`). Start PostgreSQL and the backend first; the Vite dev server proxies `/api` to http://localhost:8080, so the panel and the API share one origin, as they will behind nginx.
 
@@ -99,13 +165,15 @@ pnpm lint && pnpm typecheck && pnpm test && pnpm -r build
 
 The Docker image is built from `frontend/apps/admin-web/Dockerfile` (static files served by nginx, config in `infra/nginx/`); `docker compose -f infra/compose.yaml up --build admin-web` rebuilds it.
 
-### Public website (development)
+### Public website
 
 The public site is a Next.js app in `frontend/apps/public-web`. It reads the public API on the server, so the browser never talks to the backend directly; `API_BASE_URL` points it there (default http://localhost:8080).
 
 ```bash
 pnpm --filter @blog/public-web dev    # http://localhost:3000 (redirects to /tr or /en)
 ```
+
+Stop the Docker `public-web` first (port 3000). For admin changes to refresh the dev server right away, start it with the same `REVALIDATE_SECRET` as the backend (for example after `set -a; . ../infra/.env; set +a`).
 
 Pages are rendered on their first visit and refreshed at most once a minute, so `next build` doesn't need a running backend. When `REVALIDATE_SECRET` is set (the same value for the backend and public-web, see `infra/.env.example`), every change saved in the admin panel refreshes the site right away: the backend calls public-web's `POST /api/revalidate` after the save. Uploaded images are served in smaller WebP versions (`srcset`) by Next.js's built-in image optimizer, generated on first request and cached by public-web. Content comes from the admin panel: the profile (including education), the About and Now pages, uses, experience and posts.
 
@@ -121,6 +189,14 @@ pnpm --filter @blog/api-client gen:api
 ```
 
 The backend test `OpenApiSpecTests` fails when the committed spec no longer matches the API.
+
+## Troubleshooting
+
+- **Port 8080, 3000 or 5432 is already in use:** a backend started from the IDE and the Docker backend both want 8080 (the same goes for `pnpm dev` and port 3000). Stop one of them, for example `docker compose -f infra/compose.yaml stop backend`.
+- **The backend doesn't start and says "JWT_SECRET must be base64 encoded":** `JWT_SECRET` isn't set at all, so the literal `${JWT_SECRET}` reaches the app. Check `infra/.env` (and the IDE run configuration).
+- **Login keeps answering "too many attempts":** after 10 failed logins in 15 minutes the backend locks that address. The counter lives in memory: `docker compose -f infra/compose.yaml restart backend`.
+- **The public site stops picking up changes after the computer slept:** Docker Desktop pauses its VM while the Mac sleeps, and Next.js's cache clock falls behind. `docker compose -f infra/compose.yaml restart public-web` (restart `pnpm dev` the same way).
+- **A page shows an error while the backend is down:** pages visited before keep being served from the cache; pages never rendered yet need the backend.
 
 ## License
 
