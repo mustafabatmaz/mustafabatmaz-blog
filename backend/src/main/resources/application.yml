@@ -37,6 +37,12 @@ blog:
     # Outside the repository, so uploads can never be committed by accident
     dir: ${MEDIA_DIR:${user.home}/.mustafabatmaz-blog/media}
     max-file-size: 5MB
+  revalidation:
+    # After an admin change public-web is told to rebuild its pages (6a). Without a secret this is off and the
+    # pages still refresh within a minute. The default suits IntelliJ next to pnpm dev; compose passes the
+    # service name
+    url: ${PUBLIC_WEB_URL:http://localhost:3000}
+    secret: ${REVALIDATE_SECRET:}
 
 springdoc:
   # Responses are JSON; without this the spec says */* and generated frontend types lose the body type

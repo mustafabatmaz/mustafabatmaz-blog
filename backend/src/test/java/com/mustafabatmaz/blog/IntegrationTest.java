@@ -45,6 +45,9 @@ public abstract class IntegrationTest {
         registry.add("blog.auth.jwt-secret", () -> "dGVzdC1vbmx5LWp3dC1zZWNyZXQtZm9yLWludGVncmF0aW9uLXRlc3Rz");
         registry.add("blog.auth.cookie-secure", () -> "false");
         registry.add("blog.media.dir", MEDIA_DIR::toString);
+        // Every admin write notifies this stand-in for public-web
+        registry.add("blog.revalidation.url", FakePublicWeb::url);
+        registry.add("blog.revalidation.secret", () -> FakePublicWeb.SECRET);
         // Set here rather than on OpenApiSpecTests so every test class shares one cached context
         registry.add("springdoc.api-docs.enabled", () -> "true");
     }
