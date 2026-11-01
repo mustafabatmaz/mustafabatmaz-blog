@@ -10,6 +10,27 @@ async function render(markdown: string) {
 const java = "```java\npublic enum Status { DRAFT }\n```";
 
 describe("HighlightedMarkdownArticle", () => {
+  it("shouldLetTheSiteOfferSmallerVersions_ofItsImages", async () => {
+    const images = (src: string) =>
+      src === "/media/a.png" ? { srcSet: "/small/a.webp 480w", sizes: "100vw" } : null;
+    const html = renderToStaticMarkup(
+      await HighlightedMarkdownArticle({
+        markdown: "![Diagram](/media/a.png)\n\n![Other](https://example.com/b.png)",
+        images,
+      }),
+    );
+
+    expect(html).toContain('srcSet="/small/a.webp 480w" sizes="100vw"');
+    // An image the site can't resize keeps only its own address
+    expect(html).toMatch(/<img src="https:\/\/example\.com\/b\.png" alt="Other" loading="lazy"/);
+  });
+
+  it("shouldKeepMarkdownImagesPlain_whenNoResizerIsGiven", async () => {
+    const html = await render("![Diagram](/media/a.png)");
+
+    expect(html).not.toContain("srcset");
+  });
+
   it("shouldColourCode_withTheIndigoMistTheme", async () => {
     const html = await render(java);
 

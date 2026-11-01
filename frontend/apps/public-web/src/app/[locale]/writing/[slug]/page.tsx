@@ -8,6 +8,7 @@ import { PostTags } from "@/features/writing/PostTags";
 import { Link } from "@/i18n/navigation";
 import { nowSummary } from "@/features/now/nowSummary";
 import { getPost } from "@/lib/content";
+import { responsiveImage } from "@/lib/images";
 import { pageMetadata, postAlternates } from "@/lib/seo";
 
 export async function generateMetadata({
@@ -79,11 +80,12 @@ export default async function PostPage({ params }: PageProps<"/[locale]/writing/
               )}
             </div>
             {post.cover && (
-              // A plain <img>: sizes aren't stored, and the file comes through the /api/public/media rewrite
-              // (5c decision 6). It's the largest thing above the fold, so it loads first.
+              // A plain <img> with the optimizer's smaller versions (6b decision 1; next/image would need the
+              // sizes, which aren't stored). It's the largest thing above the fold, so it loads first.
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={post.cover.url}
+                {...responsiveImage(post.cover.url)}
                 alt={post.cover.alt}
                 loading="eager"
                 fetchPriority="high"
@@ -93,7 +95,7 @@ export default async function PostPage({ params }: PageProps<"/[locale]/writing/
           </>
         }
       >
-        <HighlightedMarkdownArticle markdown={post.bodyMd} />
+        <HighlightedMarkdownArticle markdown={post.bodyMd} images={responsiveImage} />
         {(post.previous ?? post.next) && (
           <nav
             aria-label={t("otherPosts")}

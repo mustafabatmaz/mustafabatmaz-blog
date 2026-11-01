@@ -73,3 +73,25 @@ export const articleComponents: Components = {
   td: ({ children }) => <td className="border px-3 py-2">{children}</td>,
   hr: () => <hr className="border-t" />,
 };
+
+// Lets the public site offer smaller versions of its own images (6b): srcset and sizes for an address it can
+// resize, null to keep the plain src. Only the src goes in, as everywhere above.
+export type ImageResizer = (src: string) => { srcSet: string; sizes: string } | null;
+
+export function articleComponentsWith(images: ImageResizer | undefined): Components {
+  if (!images) {
+    return articleComponents;
+  }
+  return {
+    ...articleComponents,
+    img: ({ src, alt }) => (
+      <img
+        src={src}
+        {...(typeof src === "string" ? images(src) : null)}
+        alt={alt ?? ""}
+        loading="lazy"
+        className="max-w-full rounded-2xl"
+      />
+    ),
+  };
+}
