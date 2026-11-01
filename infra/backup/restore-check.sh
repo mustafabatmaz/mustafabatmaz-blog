@@ -11,6 +11,8 @@ DB_CONTAINER="blog-restore-check"
 
 cleanup() {
     docker rm -f "$DB_CONTAINER" > /dev/null 2>&1 || true
+    # restic runs as root in its container, so what it restored belongs to root: removed from inside one
+    docker run --rm --entrypoint rm -v "$SCRATCH:/scratch" "$RESTIC_IMAGE" -rf /scratch/backup > /dev/null 2>&1 || true
     rm -rf "$SCRATCH"
 }
 trap cleanup EXIT
