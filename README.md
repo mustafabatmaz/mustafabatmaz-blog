@@ -126,6 +126,16 @@ docker compose -f infra/compose.yaml up -d    # start again
 
 Content lives in two Docker volumes: the database (`pgdata`) and uploaded images (`media`). `docker compose -f infra/compose.yaml down` removes the containers and keeps both; `down -v` **deletes all content**.
 
+### Production setup
+
+In production, [Caddy](https://caddyserver.com) is the only service the internet reaches: it gets and renews the TLS certificates, redirects HTTP to HTTPS and `www` to the bare domain, and passes requests to the public site and the admin panel over the compose network. `infra/compose.prod.yaml` holds just the differences from `compose.yaml` (Caddy, no published ports for the other services, restart policies):
+
+```bash
+docker compose -f infra/compose.yaml -f infra/compose.prod.yaml up -d --build
+```
+
+On the server, `infra/.env` sets `SITE_DOMAIN`, `ADMIN_DOMAIN`, `HSTS_MAX_AGE`, `SITE_URL=https://…`, `COOKIE_SECURE=true` and new secrets. The same command works locally with the example values (`https://localhost`, `https://backoffice.localhost`; Caddy signs these with its own local CA, so the browser warns once).
+
 ## Development
 
 ### Backend

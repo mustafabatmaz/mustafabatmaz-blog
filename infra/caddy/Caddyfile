@@ -1,0 +1,36 @@
+# The only door to the internet in production (Phase 7a). Caddy gets and renews the TLS certificates itself and
+# sends plain HTTP on to HTTPS. Behind it, everything talks over the compose network.
+# Domains and the HSTS lifetime come from infra/.env: the real ones on the server; localhost, backoffice.localhost
+# and 0 for a local try (Caddy then signs with its own local CA).
+
+# Every site: HSTS (7a decision 5; max-age 0 switches it off) and no "Server: Caddy" advertising
+(common) {
+	header {
+		Strict-Transport-Security "max-age={$HSTS_MAX_AGE}; includeSubDomains"
+		-Server
+	}
+}
+
+{$SITE_DOMAIN} {
+	import common
+
+	# Only the backend may ask for a refresh, and it calls public-web over the compose network, never through
+	# here. 404 rather than 403: from outside the door doesn't exist (7a decision 6)
+	@revalidate path /api/revalidate /api/revalidate/*
+	respond @revalidate 404
+
+	reverse_proxy public-web:3000
+}
+
+# One address for the site (canonical links, sitemap, RSS): www goes to the bare domain, path kept
+www.{$SITE_DOMAIN} {
+	import common
+	redir https://{$SITE_DOMAIN}{uri} permanent
+}
+
+# The admin panel's nginx serves the app and passes /api to the backend. Caddy writes the client's address in
+# X-Forwarded-For and ignores whatever the client sent there (7a decision 4)
+{$ADMIN_DOMAIN} {
+	import common
+	reverse_proxy admin-web:8080
+}
