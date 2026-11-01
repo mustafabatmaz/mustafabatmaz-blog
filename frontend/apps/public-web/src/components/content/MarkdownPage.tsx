@@ -2,6 +2,7 @@ import { MarkdownArticle } from "@blog/markdown";
 import { getFormatter } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { getPage } from "@/lib/content";
+import { responsiveImage } from "@/lib/images";
 import type { Locale } from "@/i18n/routing";
 import { LanguageNotice } from "./LanguageNotice";
 import { PageHero } from "./PageHero";
@@ -35,7 +36,7 @@ export async function MarkdownPage({
       </PageHero>
       <LanguageNotice contentLang={page.lang} />
       <article lang={page.lang} className="flex max-w-175 flex-col gap-7">
-        <MarkdownArticle markdown={page.bodyMd} />
+        <MarkdownArticle markdown={page.bodyMd} images={responsiveImage} />
         {footer && (
           <p className="border-t pt-6 font-mono text-xs text-muted-foreground">{footer(updated)}</p>
         )}

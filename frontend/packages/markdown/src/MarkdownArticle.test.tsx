@@ -15,6 +15,19 @@ describe("MarkdownArticle", () => {
     expect(html).toMatch(/<h2[^>]*>Ayrıntı<\/h2>/);
   });
 
+  it("shouldLetTheSiteOfferSmallerVersions_ofItsImages", () => {
+    const html = renderToStaticMarkup(
+      <MarkdownArticle
+        markdown="![Diagram](/media/a.png)"
+        images={(src) =>
+          src === "/media/a.png" ? { srcSet: "/small/a.webp 480w", sizes: "100vw" } : null
+        }
+      />,
+    );
+
+    expect(html).toContain('srcSet="/small/a.webp 480w" sizes="100vw"');
+  });
+
   it("shouldKeepTheImageSourceAndAltText", () => {
     const html = render("![Mimari şema](/api/public/media/abc.webp)");
 

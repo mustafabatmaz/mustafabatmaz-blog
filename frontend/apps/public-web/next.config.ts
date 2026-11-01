@@ -1,6 +1,7 @@
 import { fileURLToPath } from "node:url";
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
+import { imageWidths } from "./src/lib/images";
 import { securityHeaders } from "./src/lib/securityHeaders";
 
 // Finds the request config at src/i18n/request.ts
@@ -22,6 +23,15 @@ const nextConfig: NextConfig = {
     ],
   },
   poweredByHeader: false,
+  // Next's image optimizer (/_next/image, sharp) resizes our uploads into WebP for srcset (6b decision 1). Only
+  // our own media path, without a query string, and only these widths, so the set of variants per image stays
+  // small. The variants are cached as long as the backend lets browsers keep the original (a year, immutable)
+  images: {
+    localPatterns: [{ pathname: "/api/public/media/**", search: "" }],
+    deviceSizes: imageWidths,
+    imageSizes: [],
+    formats: ["image/webp"],
+  },
   // The workspace packages ship TypeScript source; Next compiles them like app code
   transpilePackages: ["@blog/api-client", "@blog/markdown", "@blog/slug"],
   // §2 names /rss.xml; the feeds are per language (5d decision 3), Turkish being the default

@@ -12,6 +12,7 @@ import { yearOf, yearRange } from "@/features/experience/years";
 import { Link } from "@/i18n/navigation";
 import { nowSummary } from "@/features/now/nowSummary";
 import { getCaseStudy } from "@/lib/content";
+import { responsiveImage } from "@/lib/images";
 import { pageAlternates, pageMetadata } from "@/lib/seo";
 
 export async function generateMetadata({
@@ -83,7 +84,7 @@ export default async function CaseStudyPage({ params }: PageProps<"/[locale]/exp
             <Highlights markdown={study.highlightsMd} />
           </section>
         )}
-        <HighlightedMarkdownArticle markdown={study.caseStudyMd} />
+        <HighlightedMarkdownArticle markdown={study.caseStudyMd} images={responsiveImage} />
       </div>
       <Link href="/experience" className={`${pillOutline} self-start`}>
         ← {t("experience.backAll")}

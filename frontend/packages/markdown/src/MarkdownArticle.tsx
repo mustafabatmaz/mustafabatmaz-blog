@@ -1,7 +1,7 @@
 import Markdown, { type Options } from "react-markdown";
 import rehypeSanitize from "rehype-sanitize";
 import remarkGfm from "remark-gfm";
-import { articleComponents } from "./components";
+import { articleComponentsWith, type ImageResizer } from "./components";
 import { rehypeCodeFigure, rehypeCodeMeta, rehypeHeadingIds, sanitizeSchema } from "./plugins";
 
 const remarkPlugins = [remarkGfm];
@@ -17,13 +17,13 @@ const rehypePlugins: Options["rehypePlugins"] = [
 export const articleClassName =
   "flex flex-col gap-7 text-[18px] leading-[1.75] text-prose [&>p:first-child]:text-[21px] [&>p:first-child]:leading-[1.6] [&>p:first-child]:font-medium [&>p:first-child]:text-foreground";
 
-export function MarkdownArticle({ markdown }: { markdown: string }) {
+export function MarkdownArticle({ markdown, images }: { markdown: string; images?: ImageResizer }) {
   return (
     <div className={articleClassName}>
       <Markdown
         remarkPlugins={remarkPlugins}
         rehypePlugins={rehypePlugins}
-        components={articleComponents}
+        components={articleComponentsWith(images)}
       >
         {markdown}
       </Markdown>
