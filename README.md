@@ -136,6 +136,58 @@ docker compose -f infra/compose.yaml -f infra/compose.prod.yaml up -d --build
 
 On the server, `infra/.env` sets `SITE_DOMAIN`, `ADMIN_DOMAIN`, `HSTS_MAX_AGE`, `SITE_URL=https://…`, `COOKIE_SECURE=true` and new secrets. The same command works locally with the example values (`https://localhost`, `https://backoffice.localhost`; Caddy signs these with its own local CA, so the browser warns once).
 
+## Operations (production server)
+
+### Updating the site
+
+On the server, in the repository folder:
+
+```bash
+git pull
+docker compose -f infra/compose.yaml -f infra/compose.prod.yaml up -d --build
+docker image prune -f    # drop the old images the build replaced
+```
+
+The images are built on the server; the site keeps running on the old containers until the new ones are ready.
+
+### Backups
+
+Every night at 03:00 (Turkish time) `infra/backup/backup.sh` dumps the database, then [restic](https://restic.net) sends the dump and the uploaded images to Backblaze B2, encrypted on the server, and keeps 7 daily, 4 weekly and 6 monthly snapshots. The latest dump also stays on the server in `~/backups/db/blog.dump`. A [healthchecks.io](https://healthchecks.io) check e-mails when a night's backup doesn't report in.
+
+One-time setup on the server:
+
+```bash
+mkdir -p ~/.config && cp infra/backup/blog-backup.env.example ~/.config/blog-backup.env
+chmod 600 ~/.config/blog-backup.env      # then fill in the secrets
+docker run --rm --env-file ~/.config/blog-backup.env restic/restic:0.19.1 init
+sudo cp infra/backup/blog-backup.service infra/backup/blog-backup.timer /etc/systemd/system/
+sudo systemctl daemon-reload && sudo systemctl enable --now blog-backup.timer
+```
+
+Keep `RESTIC_PASSWORD` and the server's `infra/.env` in a password manager: without them the backups can't be opened, and a new server can't be set up.
+
+Run a backup now, check the timer, or prove the latest backup restores (into a throwaway database; the live site isn't touched):
+
+```bash
+sudo systemctl start blog-backup.service
+systemctl list-timers blog-backup.timer
+infra/backup/restore-check.sh
+```
+
+### Restoring onto a new server
+
+1. Set up the server and clone the repository as in [Getting started](#getting-started); put back `infra/.env` and `~/.config/blog-backup.env` from the password manager.
+2. Download the latest backup: `docker run --rm --env-file ~/.config/blog-backup.env -v ~/restore:/restore restic/restic:0.19.1 restore latest --host blog-vps --target /restore`
+3. Start only the database, load the dump, and copy the images into the media volume:
+
+   ```bash
+   docker compose -f infra/compose.yaml -f infra/compose.prod.yaml up -d postgres
+   docker compose -f infra/compose.yaml -f infra/compose.prod.yaml exec -T postgres sh -c 'pg_restore -U "$POSTGRES_USER" -d "$POSTGRES_DB" --no-owner --clean --if-exists' < ~/restore/backup/db/blog.dump
+   docker run --rm -v mustafabatmaz-blog_media:/media -v ~/restore/backup/media:/from:ro alpine cp -a /from/. /media/
+   ```
+
+4. Start everything: `docker compose -f infra/compose.yaml -f infra/compose.prod.yaml up -d --build`.
+
 ## Development
 
 ### Backend

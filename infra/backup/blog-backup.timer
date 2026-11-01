@@ -1,0 +1,12 @@
+# Every night at 03:00 Turkish time (7c decision 3). Persistent: a run missed while the server was down happens
+# as soon as it is back. Enable with: sudo systemctl enable --now blog-backup.timer
+[Unit]
+Description=Nightly backup of mustafabatmaz.com
+
+[Timer]
+OnCalendar=*-*-* 03:00:00 Europe/Istanbul
+Persistent=true
+RandomizedDelaySec=10min
+
+[Install]
+WantedBy=timers.target
