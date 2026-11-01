@@ -1,0 +1,47 @@
+# Production differences only (7a decision 2), on top of compose.yaml:
+#   docker compose -f infra/compose.yaml -f infra/compose.prod.yaml up -d --build
+# Caddy is the only service the internet reaches. The others drop the ports compose.yaml publishes for local
+# tools and talk over the compose network only. unless-stopped brings everything back after a reboot or a crash.
+
+services:
+  caddy:
+    image: caddy:2.11-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp" # HTTP/3
+    environment:
+      SITE_DOMAIN: ${SITE_DOMAIN}
+      ADMIN_DOMAIN: ${ADMIN_DOMAIN}
+      HSTS_MAX_AGE: ${HSTS_MAX_AGE:-0}
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      # Certificates and keys: must outlive the container, or every restart asks Let's Encrypt again
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      public-web:
+        condition: service_healthy
+      admin-web:
+        condition: service_healthy
+
+  postgres:
+    restart: unless-stopped
+    ports: !reset []
+
+  backend:
+    restart: unless-stopped
+    ports: !reset []
+
+  public-web:
+    restart: unless-stopped
+    ports: !reset []
+
+  admin-web:
+    restart: unless-stopped
+    ports: !reset []
+
+volumes:
+  caddy_data:
+  caddy_config:
