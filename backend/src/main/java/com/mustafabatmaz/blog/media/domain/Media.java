@@ -47,6 +47,11 @@ public class Media extends AuditableEntity {
     @Column(name = "metadata_stripped", nullable = false, updatable = false)
     private boolean metadataStripped;
 
+    /** As shown (EXIF rotation applied); null when the file header couldn't be read. */
+    private Integer width;
+
+    private Integer height;
+
     @OneToMany(mappedBy = "media", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MediaTranslation> translations = new ArrayList<>();
 
@@ -57,5 +62,10 @@ public class Media extends AuditableEntity {
         this.sizeBytes = sizeBytes;
         this.originalFilename = originalFilename;
         this.metadataStripped = metadataStripped;
+    }
+
+    public void setDimensions(ImageDimensions dimensions) {
+        this.width = dimensions.width();
+        this.height = dimensions.height();
     }
 }

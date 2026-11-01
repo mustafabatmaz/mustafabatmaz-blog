@@ -652,6 +652,10 @@ export interface components {
             sizeBytes: number;
             originalFilename?: string | null;
             metadataStripped: boolean;
+            /** Format: int32 */
+            width?: number | null;
+            /** Format: int32 */
+            height?: number | null;
             translations: components["schemas"]["MediaTranslationDto"][];
             /** Format: int64 */
             version: number;
@@ -736,6 +740,10 @@ export interface components {
         CoverResponse: {
             url: string;
             alt: string;
+            /** Format: int32 */
+            width?: number | null;
+            /** Format: int32 */
+            height?: number | null;
         };
         PageResponsePostSummaryResponse: {
             items: components["schemas"]["PostSummaryResponse"][];

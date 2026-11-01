@@ -14,6 +14,8 @@ public interface MediaRepository extends JpaRepository<Media, Long> {
 
     Optional<Media> findByStorageKey(String storageKey);
 
+    List<Media> findAllByWidthIsNull();
+
     @EntityGraph(attributePaths = "translations")
     List<Media> findAllByIdIn(Collection<Long> ids);
 }

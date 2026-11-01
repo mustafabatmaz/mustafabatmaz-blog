@@ -11,6 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.startsWith;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -24,11 +25,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.jayway.jsonpath.JsonPath;
 import com.mustafabatmaz.blog.IntegrationTest;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.DefaultApplicationArguments;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
@@ -39,6 +45,10 @@ class MediaApiTests extends IntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    @Qualifier("mediaSizesAtStartup")
+    private ApplicationRunner mediaSizesAtStartup;
 
     @BeforeEach
     void clearMedia() {
@@ -56,6 +66,37 @@ class MediaApiTests extends IntegrationTest {
                 .andExpect(header().string("X-Content-Type-Options", "nosniff"))
                 .andExpect(header().string("Cache-Control", containsString("immutable")))
                 .andExpect(content().bytes(image));
+    }
+
+    @Test
+    void shouldRecordTheImageSize_whenUploading() throws Exception {
+        String response = upload("photo.png", "image/png", resource("5x3.png"));
+
+        assertThat((Integer) JsonPath.read(response, "$.width")).isEqualTo(5);
+        assertThat((Integer) JsonPath.read(response, "$.height")).isEqualTo(3);
+    }
+
+    @Test
+    void shouldStillAcceptTheUpload_whenItsSizeCantBeRead() throws Exception {
+        // This AVIF has no size property: the page just won't reserve room for it
+        mockMvc.perform(uploadRequest("photo.avif", "image/avif", avif()))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.width", nullValue()))
+                .andExpect(jsonPath("$.height", nullValue()));
+    }
+
+    @Test
+    void shouldFillInTheSize_ofImagesUploadedBeforeSizesWereStored() throws Exception {
+        upload("photo.png", "image/png", resource("5x3.png"));
+        jdbc.execute("UPDATE media SET width = NULL, height = NULL");
+
+        // The startup path itself: the runner bean, not the service method (a runner inside the service called it
+        // past the proxy, without a transaction, and nothing was saved)
+        mediaSizesAtStartup.run(new DefaultApplicationArguments());
+
+        mockMvc.perform(asAdmin(get(ADMIN)))
+                .andExpect(jsonPath("$[0].width").value(5))
+                .andExpect(jsonPath("$[0].height").value(3));
     }
 
     @Test
@@ -182,6 +223,15 @@ class MediaApiTests extends IntegrationTest {
                         .file(new MockMultipartFile("file", "photo.png", "image/png", png()))
                         .with(csrf()))
                 .andExpect(status().isUnauthorized());
+    }
+
+    private static byte[] resource(String name) throws IOException {
+        try (InputStream in = MediaApiTests.class.getResourceAsStream("/images/" + name)) {
+            if (in == null) {
+                throw new IOException("Missing test image " + name);
+            }
+            return in.readAllBytes();
+        }
     }
 
     private String upload(String fileName, String contentType, byte[] bytes) throws Exception {

@@ -80,16 +80,19 @@ export default async function PostPage({ params }: PageProps<"/[locale]/writing/
               )}
             </div>
             {post.cover && (
-              // A plain <img> with the optimizer's smaller versions (6b decision 1; next/image would need the
-              // sizes, which aren't stored). It's the largest thing above the fold, so it loads first.
+              // A plain <img> with the optimizer's smaller versions (6b decision 1). width and height give the
+              // browser its proportions, so the page keeps the room before the image arrives (no layout shift);
+              // h-auto keeps it fitting the column. It's the largest thing above the fold, so it loads first.
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={post.cover.url}
                 {...responsiveImage(post.cover.url)}
+                width={post.cover.width ?? undefined}
+                height={post.cover.height ?? undefined}
                 alt={post.cover.alt}
                 loading="eager"
                 fetchPriority="high"
-                className="w-full rounded-[22px]"
+                className="h-auto w-full rounded-[22px]"
               />
             )}
           </>

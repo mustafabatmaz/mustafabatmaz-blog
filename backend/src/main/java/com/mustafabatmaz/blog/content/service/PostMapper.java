@@ -130,7 +130,9 @@ interface PostMapper {
     }
 
     private static CoverResponse toCover(MediaReference cover, Language lang) {
-        return cover == null ? null : new CoverResponse(cover.url(), cover.altText(lang));
+        return cover == null
+                ? null
+                : new CoverResponse(cover.url(), cover.altText(lang), cover.width(), cover.height());
     }
 
     private static PostLink toLink(PostTranslation translation) {

@@ -1,11 +1,13 @@
 package com.mustafabatmaz.blog.media.service;
 
+import com.mustafabatmaz.blog.media.domain.ExifOrientation;
 import com.mustafabatmaz.blog.media.domain.ImageFormat;
+import com.mustafabatmaz.blog.media.domain.JpegSegments;
+import com.mustafabatmaz.blog.media.domain.JpegSegments.Segment;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +19,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class MetadataStripper {
 
+    // Only carries the outcome back to the caller; never compared or hashed, so comparing the array by reference
+    // (the record default Sonar warns about) never matters
+    @SuppressWarnings("java:S6218")
     public record Result(byte[] data, boolean stripped) {}
 
     public Result strip(ImageFormat format, byte[] data) {
@@ -35,93 +40,56 @@ public class MetadataStripper {
 
     // ---- JPEG: a list of segments (FF xx + length) up to "start of scan", then image data ----
 
-    private static final int SOS = 0xDA;
-    private static final int EOI = 0xD9;
-    private static final int APP0 = 0xE0;
-    private static final int APP1 = 0xE1; // EXIF and XMP
     private static final int APP13 = 0xED; // Photoshop / IPTC
     private static final int COM = 0xFE; // free-text comment
-    private static final byte[] EXIF_HEADER = "Exif\0\0".getBytes(StandardCharsets.US_ASCII);
 
+    // Two steps: decide which header segments stay (EXIF, IPTC and comments go; the orientation is remembered),
+    // then write them back with the orientation in its own small segment and the image data unchanged
     private byte[] stripJpeg(byte[] data) {
         if (data.length < 4 || u8(data, 0) != 0xFF || u8(data, 1) != 0xD8) {
             throw malformed();
         }
         List<byte[]> kept = new ArrayList<>();
         Integer orientation = null;
-        int position = 2;
-        while (true) {
-            if (u8(data, position) != 0xFF) {
-                throw malformed();
-            }
-            int marker = u8(data, position + 1);
-            if (marker == 0xFF) { // fill byte
-                position++;
-                continue;
-            }
-            if (marker == SOS || marker == EOI) {
-                break;
-            }
-            if ((marker >= 0xD0 && marker <= 0xD7) || marker == 0x01) { // markers without a length
-                kept.add(slice(data, position, position + 2));
-                position += 2;
-                continue;
-            }
-            int end = position + 2 + u16(data, position + 2);
-            if (end > data.length || end < position + 4) {
-                throw malformed();
-            }
-            if (marker == APP1 && startsWith(data, position + 4, EXIF_HEADER)) {
-                orientation = readOrientation(data, position + 4 + EXIF_HEADER.length, end)
+        Segment segment = jpegSegmentAt(data, 2);
+        while (!JpegSegments.isScanOrEnd(segment.marker())) {
+            if (JpegSegments.isExif(data, segment)) {
+                orientation = ExifOrientation.read(data, JpegSegments.exifTiffStart(segment), segment.end())
                         .orElse(orientation);
             }
-            if (marker != APP1 && marker != APP13 && marker != COM) {
-                kept.add(slice(data, position, end));
+            if (segment.marker() != JpegSegments.APP1 && segment.marker() != APP13 && segment.marker() != COM) {
+                kept.add(slice(data, segment.start(), segment.end()));
             }
-            position = end;
+            segment = jpegSegmentAt(data, segment.end());
         }
+        return writeJpeg(kept, orientation, data, segment.start());
+    }
 
+    // The next segment, or a rejected file: not a marker, or a length that runs past the end or is too short to
+    // hold itself. Fill bytes are skipped, so they don't reach the output.
+    private static Segment jpegSegmentAt(byte[] data, int position) {
+        Segment segment = JpegSegments.at(data, position);
+        if (segment == null
+                || segment.end() > data.length
+                || (JpegSegments.hasLength(segment.marker()) && segment.end() < segment.start() + 4)) {
+            throw malformed();
+        }
+        return segment;
+    }
+
+    // EXIF goes right after the start of image, or after JFIF when there is one. Most photos have no JFIF;
+    // appended after the frame header, standard readers miss the orientation (found in feat/image-dimensions)
+    private static byte[] writeJpeg(List<byte[]> kept, Integer orientation, byte[] data, int scanStart) {
+        if (orientation != null && orientation != 1) {
+            boolean startsWithJfif = !kept.isEmpty() && u8(kept.get(0), 1) == JpegSegments.APP0;
+            kept.add(startsWithJfif ? 1 : 0, orientationSegment(orientation));
+        }
         ByteArrayOutputStream out = new ByteArrayOutputStream(data.length);
         out.write(0xFF);
         out.write(0xD8);
-        boolean orientationWritten = orientation == null || orientation == 1;
-        for (byte[] segment : kept) {
-            out.writeBytes(segment);
-            // The EXIF segment conventionally follows the JFIF one
-            if (!orientationWritten && u8(segment, 1) == APP0) {
-                out.writeBytes(orientationSegment(orientation));
-                orientationWritten = true;
-            }
-        }
-        if (!orientationWritten) {
-            out.writeBytes(orientationSegment(orientation));
-        }
-        out.write(data, position, data.length - position); // scan data, copied unchanged
+        kept.forEach(out::writeBytes);
+        out.write(data, scanStart, data.length - scanStart); // scan data, copied unchanged
         return out.toByteArray();
-    }
-
-    /** Reads tag 0x0112 from IFD0 of the TIFF structure inside an EXIF segment. */
-    private static Optional<Integer> readOrientation(byte[] data, int tiffStart, int segmentEnd) {
-        if (tiffStart + 8 > segmentEnd) {
-            return Optional.empty();
-        }
-        boolean littleEndian = data[tiffStart] == 'I' && data[tiffStart + 1] == 'I';
-        int ifd = tiffStart + u32(data, tiffStart + 4, littleEndian);
-        if (ifd < tiffStart || ifd + 2 > segmentEnd) {
-            return Optional.empty();
-        }
-        int entries = u16(data, ifd, littleEndian);
-        for (int i = 0; i < entries; i++) {
-            int entry = ifd + 2 + i * 12;
-            if (entry + 12 > segmentEnd) {
-                return Optional.empty();
-            }
-            if (u16(data, entry, littleEndian) == 0x0112) {
-                int value = u16(data, entry + 8, littleEndian);
-                return value >= 1 && value <= 8 ? Optional.of(value) : Optional.empty();
-            }
-        }
-        return Optional.empty();
     }
 
     /** A minimal EXIF segment carrying only the orientation, so phone photos are not shown sideways. */
@@ -162,7 +130,7 @@ public class MetadataStripper {
         };
         int length = payload.length + 2;
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        out.writeBytes(new byte[] {(byte) 0xFF, (byte) APP1, (byte) (length >> 8), (byte) length});
+        out.writeBytes(new byte[] {(byte) 0xFF, (byte) JpegSegments.APP1, (byte) (length >> 8), (byte) length});
         out.writeBytes(payload);
         return out.toByteArray();
     }
@@ -241,10 +209,6 @@ public class MetadataStripper {
 
     private static int u8(byte[] data, int offset) {
         return data[offset] & 0xFF;
-    }
-
-    private static int u16(byte[] data, int offset) {
-        return u16(data, offset, false);
     }
 
     private static int u16(byte[] data, int offset, boolean littleEndian) {

@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0008-media-dimensions
+      author: mustafabatmaz
+      comment: Width and height as shown, so pages keep room for an image before it loads. Empty when unknown;
+        existing rows are filled in at startup from their files (MediaDimensionsBackfill)
+      changes:
+        - addColumn:
+            tableName: media
+            columns:
+              - column:
+                  name: width
+                  type: int
+              - column:
+                  name: height
+                  type: int

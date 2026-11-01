@@ -9,6 +9,7 @@ import static com.mustafabatmaz.blog.media.ImageBytes.exif;
 import static com.mustafabatmaz.blog.media.ImageBytes.iccProfile;
 import static com.mustafabatmaz.blog.media.ImageBytes.jfif;
 import static com.mustafabatmaz.blog.media.ImageBytes.jpeg;
+import static com.mustafabatmaz.blog.media.ImageBytes.jpegSegment;
 import static com.mustafabatmaz.blog.media.ImageBytes.png;
 import static com.mustafabatmaz.blog.media.ImageBytes.pngChunk;
 import static com.mustafabatmaz.blog.media.ImageBytes.vp8x;
@@ -46,6 +47,46 @@ class MetadataStripperTest {
         assertThat(contains(cleaned, "GPS:")).isFalse();
         assertThat(contains(cleaned, "Exif")).isTrue();
         // Orientation tag 0x0112, type SHORT, value 6
+        assertThat(indexOf(cleaned, new byte[] {0x01, 0x12, 0, 3, 0, 0, 0, 1, 0, 6}))
+                .isPositive();
+    }
+
+    @Test
+    void shouldPutTheOrientationRightAfterTheStart_whenThePhotoHasNoJfifSegment() {
+        // Phones and most encoders write EXIF without a JFIF segment. The EXIF standard wants it right after the
+        // start of image; appended after the frame header, readers that follow the standard miss it
+        byte[] photo = jpeg(exif(6, "GPS:39.92,32.85"), iccProfile(), jpegSegment(0xC0, new byte[] {8, 0, 3, 0, 5, 1}));
+
+        byte[] cleaned = stripper.strip(ImageFormat.JPEG, photo).data();
+
+        assertThat(Arrays.copyOfRange(cleaned, 0, 4)).containsExactly(0xFF, 0xD8, 0xFF, 0xE1);
+        assertThat(contains(cleaned, "GPS:")).isFalse();
+        assertThat(contains(cleaned, "ICC_PROFILE")).isTrue();
+    }
+
+    @Test
+    void shouldDropFillBytes_andKeepMarkersWithoutALength() {
+        // An extra FF before a marker is padding; a restart marker (FF D3) has no length field. Both are legal
+        byte[] photo = jpeg(
+                jfif(),
+                new byte[] {(byte) 0xFF},
+                exif(1, "GPS:39.92,32.85"),
+                new byte[] {(byte) 0xFF, (byte) 0xD3},
+                comment("x"));
+
+        byte[] cleaned = stripper.strip(ImageFormat.JPEG, photo).data();
+
+        assertThat(cleaned).isEqualTo(jpeg(jfif(), new byte[] {(byte) 0xFF, (byte) 0xD3}));
+    }
+
+    @Test
+    void shouldStillRemoveLocationAndKeepOrientation_afterFillBytes() {
+        byte[] photo = jpeg(new byte[] {(byte) 0xFF, (byte) 0xFF}, exif(6, "GPS:39.92,32.85"), iccProfile());
+
+        byte[] cleaned = stripper.strip(ImageFormat.JPEG, photo).data();
+
+        assertThat(contains(cleaned, "GPS:")).isFalse();
+        assertThat(contains(cleaned, "ICC_PROFILE")).isTrue();
         assertThat(indexOf(cleaned, new byte[] {0x01, 0x12, 0, 3, 0, 0, 0, 1, 0, 6}))
                 .isPositive();
     }
