@@ -193,7 +193,7 @@ The backend test `OpenApiSpecTests` fails when the committed spec no longer matc
 ## Troubleshooting
 
 - **Port 8080, 3000 or 5432 is already in use:** a backend started from the IDE and the Docker backend both want 8080 (the same goes for `pnpm dev` and port 3000). Stop one of them, for example `docker compose -f infra/compose.yaml stop backend`.
-- **The backend doesn't start and says "JWT_SECRET must be base64 encoded":** `JWT_SECRET` isn't set at all, so the literal `${JWT_SECRET}` reaches the app. Check `infra/.env` (and the IDE run configuration).
+- **The backend doesn't start and says "JWT_SECRET is not set" (or `ADMIN_USERNAME`, `ADMIN_PASSWORD_HASH`):** that variable is missing from `infra/.env` or from the IDE run configuration.
 - **Login keeps answering "too many attempts":** after 10 failed logins in 15 minutes the backend locks that address. The counter lives in memory: `docker compose -f infra/compose.yaml restart backend`.
 - **The public site stops picking up changes after the computer slept:** Docker Desktop pauses its VM while the Mac sleeps, and Next.js's cache clock falls behind. `docker compose -f infra/compose.yaml restart public-web` (restart `pnpm dev` the same way).
 - **A page shows an error while the backend is down:** pages visited before keep being served from the cache; pages never rendered yet need the backend.

@@ -27,10 +27,11 @@ server:
 
 blog:
   auth:
-    # No defaults for secrets: the app refuses to start without them
-    admin-username: ${ADMIN_USERNAME}
-    admin-password-hash: ${ADMIN_PASSWORD_HASH}
-    jwt-secret: ${JWT_SECRET}
+    # Empty when unset, so validation stops the app and names the variable. Without the ":" an unset variable
+    # stays as the literal text "${JWT_SECRET}", which passes @NotBlank
+    admin-username: ${ADMIN_USERNAME:}
+    admin-password-hash: ${ADMIN_PASSWORD_HASH:}
+    jwt-secret: ${JWT_SECRET:}
     jwt-ttl: ${JWT_TTL:8h}
     cookie-secure: ${COOKIE_SECURE:true}
   media:
