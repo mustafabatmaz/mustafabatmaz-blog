@@ -129,13 +129,18 @@ Content lives in two Docker volumes: the database (`pgdata`) and uploaded images
 
 ### Production setup
 
-In production, [Caddy](https://caddyserver.com) is the only service the internet reaches: it gets and renews the TLS certificates, redirects HTTP to HTTPS and `www` to the bare domain, and passes requests to the public site and the admin panel over the compose network. `infra/compose.prod.yaml` holds just the differences from `compose.yaml` (Caddy, no published ports for the other services, restart policies):
+In production, a shared [Caddy](https://caddyserver.com) on the server is the only service the internet reaches: it runs as its own compose project (it also serves other sites), gets and renews the TLS certificates, redirects HTTP to HTTPS and `www` to the bare domain, and passes requests to the public site and the admin panel. It reads this repository's `infra/caddy/blog.caddy` and reaches the two services over the external `edge` network by the aliases `blog-public-web` and `blog-admin-web`. `infra/compose.prod.yaml` holds just the differences from `compose.yaml` (the `edge` network, no published ports, restart policies):
 
 ```bash
 docker compose -f infra/compose.yaml -f infra/compose.prod.yaml up -d --build
 ```
 
-On the server, `infra/.env` sets `SITE_DOMAIN`, `ADMIN_DOMAIN`, `HSTS_MAX_AGE`, `SITE_URL=https://…`, `COOKIE_SECURE=true` and new secrets. The same command works locally with the example values (`https://localhost`, `https://backoffice.localhost`; Caddy signs these with its own local CA, so the browser warns once).
+On the server, `infra/.env` sets `SITE_URL=https://…`, `COOKIE_SECURE=true` and new secrets; the domains and the HSTS lifetime belong to the edge Caddy. To try the production setup locally, `infra/compose.local-edge.yaml` adds a stand-in for the edge (`https://localhost`, `https://backoffice.localhost`; Caddy signs these with its own local CA, so the browser warns once):
+
+```bash
+docker network create edge   # once
+docker compose -f infra/compose.yaml -f infra/compose.prod.yaml -f infra/compose.local-edge.yaml up -d --build
+```
 
 ## Operations (production server)
 
