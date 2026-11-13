@@ -1,0 +1,11 @@
+# Main Caddyfile of the local edge (compose.local-edge.yaml): the server's edge setup in miniature. HSTS is off
+# locally so the browser learns no rule for localhost.
+
+(common) {
+	header {
+		Strict-Transport-Security "max-age=0"
+		-Server
+	}
+}
+
+import /etc/caddy/sites/*.caddy

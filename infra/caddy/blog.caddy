@@ -1,0 +1,28 @@
+# The blog's sites for the shared edge Caddy on the server, which reads this file with an `import` line and
+# provides the (common) snippet (HSTS, no "Server: Caddy" advertising). Caddy gets and renews the TLS certificates
+# itself and sends plain HTTP on to HTTPS. The services are reached over the external edge network by their blog-*
+# aliases (compose.prod.yaml). The domains can be changed for a local try (compose.local-edge.yaml).
+
+{$BLOG_SITE_DOMAIN:mustafabatmaz.com} {
+	import common
+
+	# Only the backend may ask for a refresh, and it calls public-web over the compose network, never through
+	# here. 404 rather than 403: from outside the door doesn't exist (7a decision 6)
+	@revalidate path /api/revalidate /api/revalidate/*
+	respond @revalidate 404
+
+	reverse_proxy blog-public-web:3000
+}
+
+# One address for the site (canonical links, sitemap, RSS): www goes to the bare domain, path kept
+www.{$BLOG_SITE_DOMAIN:mustafabatmaz.com} {
+	import common
+	redir https://{$BLOG_SITE_DOMAIN:mustafabatmaz.com}{uri} permanent
+}
+
+# The admin panel's nginx serves the app and passes /api to the backend. Caddy writes the client's address in
+# X-Forwarded-For and ignores whatever the client sent there (7a decision 4)
+{$BLOG_ADMIN_DOMAIN:backoffice.mustafabatmaz.com} {
+	import common
+	reverse_proxy blog-admin-web:8080
+}

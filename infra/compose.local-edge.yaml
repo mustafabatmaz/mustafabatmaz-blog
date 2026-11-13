@@ -1,0 +1,32 @@
+# A local stand-in for the server's shared edge Caddy, to try the production setup on this machine:
+#   docker network create edge   # once
+#   docker compose -f infra/compose.yaml -f infra/compose.prod.yaml -f infra/compose.local-edge.yaml up -d --build
+# Then https://localhost and https://backoffice.localhost (Caddy signs these with its own local CA, so the browser
+# warns once). Never used on the server.
+
+services:
+  local-edge:
+    image: caddy:2.11-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp" # HTTP/3
+    environment:
+      BLOG_SITE_DOMAIN: localhost
+      BLOG_ADMIN_DOMAIN: backoffice.localhost
+    volumes:
+      - ./caddy/local-edge.Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./caddy/blog.caddy:/etc/caddy/sites/blog.caddy:ro
+      - local_edge_data:/data
+      - local_edge_config:/config
+    networks:
+      - edge
+    depends_on:
+      public-web:
+        condition: service_healthy
+      admin-web:
+        condition: service_healthy
+
+volumes:
+  local_edge_data:
+  local_edge_config:
