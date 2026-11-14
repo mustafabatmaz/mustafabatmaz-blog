@@ -1,5 +1,5 @@
 # Build context is frontend/ (the site needs the workspace packages api-client, markdown, slug and tokens):
-#   docker build -f apps/public-web/Dockerfile --build-arg API_BASE_URL=http://backend:8080 .
+#   docker build -f apps/public-web/Dockerfile --build-arg API_BASE_URL=http://blog-backend:8080 .
 
 # ---- Stage 1: build the standalone server ----
 FROM node:24-alpine AS build
@@ -13,7 +13,7 @@ RUN pnpm fetch
 
 # The image rewrite's destination is written into the build (next.config.ts), so the backend's address on
 # the compose network is a build argument too. Pages need no backend at build time (empty generateStaticParams).
-ARG API_BASE_URL=http://backend:8080
+ARG API_BASE_URL=http://blog-backend:8080
 ENV API_BASE_URL=$API_BASE_URL
 ENV NEXT_TELEMETRY_DISABLED=1
 
