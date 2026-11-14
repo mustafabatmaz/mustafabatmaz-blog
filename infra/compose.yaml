@@ -40,6 +40,12 @@ services:
       REVALIDATE_SECRET: ${REVALIDATE_SECRET:-}
     volumes:
       - media:/var/lib/blog/media
+    networks:
+      default:
+        # public-web and admin-web reach the backend by this name. In production they also join the edge network
+        # shared with other projects, where another project's "backend" may answer too; a name of our own can't
+        # be taken there
+        aliases: [blog-backend]
     ports:
       # Local tools only (Swagger, curl). Tomcat trusts X-Forwarded-For from private addresses, and a request
       # from another machine would arrive through Docker's private gateway; admin-web is the way in.
@@ -79,10 +85,10 @@ services:
       dockerfile: apps/public-web/Dockerfile
       args:
         # Written into the build: the /api/public/media rewrite's destination
-        API_BASE_URL: http://backend:8080
+        API_BASE_URL: http://blog-backend:8080
     environment:
       # Read at run time: the pages' API calls, and the address in OG images, canonical links, sitemap and RSS
-      API_BASE_URL: http://backend:8080
+      API_BASE_URL: http://blog-backend:8080
       SITE_URL: ${SITE_URL}
       # Checked on POST /api/revalidate, which the backend calls
       REVALIDATE_SECRET: ${REVALIDATE_SECRET:-}

@@ -1,6 +1,6 @@
 import { createApiClient } from "@blog/api-client";
 
-// Server-side only: the backend is reached over the compose network (http://backend:8080), never from the
+// Server-side only: the backend is reached over the compose network (http://blog-backend:8080), never from the
 // browser. Pages are cached as a whole (revalidate), so requests need no cache options of their own.
 export const api = createApiClient({
   baseUrl: process.env.API_BASE_URL ?? "http://localhost:8080",

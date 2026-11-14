@@ -2,9 +2,10 @@
 #   docker compose -f infra/compose.yaml -f infra/compose.prod.yaml up -d --build
 # The internet reaches the blog through a shared edge Caddy that runs as its own compose project on the server and
 # also serves other sites; it reads caddy/blog.caddy. public-web and admin-web join its external edge network under
-# blog-* aliases, so names stay unique next to other projects. The other services drop the ports compose.yaml
-# publishes for local tools and talk over the compose network only. unless-stopped brings everything back after a
-# reboot or a crash.
+# blog-* aliases, so names stay unique next to other projects, and they reach the backend by its own blog-backend
+# name (compose.yaml): on the shared network a plain "backend" can belong to another project. The other services
+# drop the ports compose.yaml publishes for local tools and talk over the compose network only. unless-stopped
+# brings everything back after a reboot or a crash.
 
 services:
   postgres:
